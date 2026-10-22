@@ -1,0 +1,2679 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>文韻織機：把文字剪貼成音樂</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Bodoni+Moda:ital,opsz,wght@0,6..96,400;0,6..96,700;0,6..96,800;1,6..96,400;1,6..96,800&family=LXGW+WenKai+TC:wght@400;700&family=Noto+Sans+TC:wght@500;900&family=Noto+Serif+TC:wght@400;700;900&family=Special+Elite&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#ece5d6;--sheet:#faf6ec;--news:#d5cdbc;--ink:#171513;--ink2:#4e483f;--ink3:#857d70;
+  --red:#d23a22;--yellow:#e8c552;--tape:rgba(230,212,140,.62);--dot:rgba(23,21,19,.4);--shade:rgba(40,28,16,.22);
+  --rule:rgba(23,21,19,.16);--hatch:rgba(23,21,19,.2);--tail:rgba(23,21,19,.42);--red-soft:rgba(210,58,34,.35);
+  --serif:"Noto Serif TC","Songti TC","PMingLiU",serif;
+  --sans:"Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif;
+  --hand:"LXGW WenKai TC","Kaiti TC","STKaiti","KaiTi",serif;
+  --didone:"Bodoni Moda","Didot","Bodoni 72",serif;
+  --grot:"Archivo Black","Arial Black",sans-serif;
+  --type:"Special Elite","LXGW WenKai TC","Courier New",monospace;
+  --c:21px;--lw:46px;
+  color-scheme:light;box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --paper:#1d1b18;--sheet:#2a2722;--news:#3d3830;--ink:#efe7d7;--ink2:#c3baa8;--ink3:#8e8676;
+    --red:#e8553c;--yellow:#d9b44a;--tape:rgba(200,180,110,.32);--dot:rgba(239,231,215,.3);--shade:rgba(0,0,0,.45);
+    --rule:rgba(239,231,215,.18);--hatch:rgba(239,231,215,.2);--tail:rgba(239,231,215,.4);--red-soft:rgba(232,85,60,.4);
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --paper:#1d1b18;--sheet:#2a2722;--news:#3d3830;--ink:#efe7d7;--ink2:#c3baa8;--ink3:#8e8676;
+  --red:#e8553c;--yellow:#d9b44a;--tape:rgba(200,180,110,.32);--dot:rgba(239,231,215,.3);--shade:rgba(0,0,0,.45);
+  --rule:rgba(239,231,215,.18);--hatch:rgba(239,231,215,.2);--tail:rgba(239,231,215,.4);--red-soft:rgba(232,85,60,.4);
+}
+html{-webkit-text-size-adjust:100%;scroll-padding-top:20px}
+*,*::before,*::after{box-sizing:inherit}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--serif);font-size:16.5px;line-height:1.8;-webkit-font-smoothing:antialiased;overflow-x:hidden;
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='260' height='260'><filter id='f'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 .35 0 0 0 0 .28 0 0 0 0 .2 0 0 0 .09 0'/></filter><rect width='260' height='260' filter='url(%23f)'/></svg>")}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:40;background:var(--paper)}
+button,input,select,textarea{font:inherit;color:inherit}
+:focus-visible{outline:2px dashed var(--red);outline-offset:4px}
+[hidden]{display:none!important}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+/* collage primitives */
+.rn{display:inline-block;line-height:1.02;padding:.07em .1em .1em;margin:0 .04em .1em 0;transform:rotate(var(--r,0deg)) translateY(var(--y,0));vertical-align:baseline}
+.s0{background:var(--sheet);color:var(--ink);font-family:var(--serif);font-weight:900}
+.s1{background:var(--ink);color:var(--paper);font-family:var(--sans);font-weight:900}
+.s2{background:var(--red);color:#fff;font-family:var(--serif);font-weight:900}
+.s3{background:var(--news);color:var(--ink);font-family:var(--hand);font-weight:700}
+.s4{background:var(--yellow);color:#171513;font-family:var(--sans);font-weight:900}
+.s5{color:var(--red);font-family:var(--hand);font-weight:700;border-bottom:.08em solid var(--red)}
+.s6{background:var(--sheet);color:var(--ink);font-family:var(--didone);font-style:italic;font-weight:800;box-shadow:inset 0 0 0 .06em var(--ink)}
+.ransom .ln{white-space:nowrap}
+.kwl .ln{white-space:normal}
+.rn.sp{width:.35em;background:none;box-shadow:none;border:0}
+.rn.pu{background:none;box-shadow:none;border:0;color:var(--ink);font-family:var(--serif);font-weight:900;padding-left:0;padding-right:0}
+.typed{font-family:var(--type);color:var(--ink2);letter-spacing:.01em}
+.tape{position:absolute;width:96px;height:28px;background:var(--tape);z-index:4;pointer-events:none;
+  clip-path:polygon(0 8%,6% 0,12% 10%,18% 0,24% 8%,30% 0,100% 0,96% 18%,100% 34%,95% 52%,100% 70%,95% 86%,100% 100%,0 100%,4% 82%,0 64%,5% 46%,0 28%)}
+.ill svg{display:block;width:100%;height:auto;overflow:visible}
+.ill path{fill:none;stroke:var(--ink);stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round;vector-effect:non-scaling-stroke}
+.ill path.f-red{fill:var(--red)}.ill path.f-ink{fill:var(--ink)}
+.ill path.dash{stroke-dasharray:4 5}
+.scrib{background:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 12' preserveAspectRatio='none'><path d='M2 7C20 3 40 10 58 5S88 4 98 7' fill='none' stroke='%23d23a22' stroke-width='2.4' stroke-linecap='round'/></svg>") no-repeat bottom/100% .42em;padding-bottom:.18em}
+
+/* masthead */
+.mast{max-width:1240px;margin:0 auto;padding:22px 18px 0;display:flex;flex-wrap:wrap;align-items:flex-end;gap:10px 26px;position:relative}
+.logo{font-size:clamp(26px,4.4vw,40px);text-decoration:none;color:inherit;display:block}
+.issue{font-size:14px;margin:0 auto 10px 0;line-height:1.5}
+.issue b{font-family:var(--didone);font-style:italic;font-weight:800;font-size:20px;color:var(--red)}
+.nav{display:flex;gap:16px;align-items:flex-end;margin-bottom:6px}
+.nav button{border:0;background:none;padding:2px 0;cursor:pointer;font-size:19px;color:var(--ink2);transform:rotate(var(--r,0deg))}
+.nav button span{display:inline-block;padding:2px 9px 3px}
+.nav button[data-go="loom"] span{font-family:var(--sans);font-weight:900}
+.nav button[data-go="method"] span{font-family:var(--serif);font-weight:900}
+.nav button[data-go="tune"] span{font-family:var(--hand);font-weight:700}
+.nav button[aria-current="page"]{color:var(--ink)}
+.nav button[aria-current="page"] span{background:var(--ink);color:var(--paper)}
+.nav button[data-go="method"][aria-current="page"] span{background:var(--red);color:#fff}
+.nav button[data-go="tune"][aria-current="page"] span{background:var(--yellow);color:#171513}
+.rule{max-width:1240px;margin:10px auto 0;padding:0 18px}
+.rule svg{display:block;width:100%;height:14px}
+.rule path{fill:none;stroke:var(--ink);stroke-width:1.6;vector-effect:non-scaling-stroke}
+
+.wrap{max-width:1240px;margin:0 auto;padding:20px 18px 80px}
+
+/* ---------- 織樂 ---------- */
+.loom{display:grid;gap:30px}
+@media (min-width:980px){.loom{grid-template-columns:minmax(0,.86fr) minmax(0,1.14fr);column-gap:56px;align-items:start}}
+.hero{font-size:clamp(30px,5.1vw,56px);margin:8px 0 6px;line-height:1.08;font-weight:900}
+.lede{margin:16px 0 26px;max-width:28em;font-size:15.5px;line-height:1.7}
+.sheetw{position:relative;filter:drop-shadow(2px 4px 0 var(--shade)) drop-shadow(0 10px 14px rgba(40,28,16,.12));transform:rotate(-1.1deg);margin:70px 4px 0}
+.sheet{background:var(--sheet)}
+.sheetw .tape{top:-12px;left:28px;transform:rotate(-7deg)}
+.sheetw .tape.b{left:auto;right:30px;transform:rotate(9deg)}
+.ruled textarea{display:block;width:100%;min-height:170px;resize:vertical;border:0;outline:none;padding:22px 20px 22px 50px;
+  font-family:var(--hand);font-size:20px;line-height:36px;color:var(--ink);
+  background:linear-gradient(90deg,transparent 36px,var(--red-soft) 36px,var(--red-soft) 37px,transparent 37px),repeating-linear-gradient(transparent 0 35px,var(--rule) 35px 36px);background-position:0 0,0 21px}
+.handpt{position:absolute;width:92px;right:12%;top:-58px;transform:rotate(36deg);z-index:5;pointer-events:none}
+.handpt + .note{position:absolute;right:calc(12% + 104px);top:-40px;font-family:var(--hand);font-weight:700;font-size:18px;color:var(--red);transform:rotate(-5deg);pointer-events:none;white-space:nowrap}
+.clips{display:flex;flex-wrap:wrap;gap:10px 12px;margin:30px 0 0;padding-left:6px}
+.clip{border:0;cursor:pointer;font-family:var(--type);font-size:14px;padding:5px 11px 4px;background:var(--news);color:var(--ink);transform:rotate(var(--r,0deg));
+  box-shadow:2px 3px 0 var(--shade);transition:transform .15s}
+.clip:nth-child(3n+1){background:var(--sheet)}
+.clip:hover{transform:rotate(0deg) translateY(-2px)}
+.seeds{display:flex;flex-wrap:wrap;gap:18px 26px;margin:34px 0 0;padding-left:8px}
+.stamp{border:0;background:none;cursor:pointer;padding:8px 16px 7px;transform:rotate(var(--r,0deg));text-align:left;line-height:1.3;color:var(--ink3);
+  box-shadow:inset 0 0 0 2px currentColor,inset 0 0 0 5px var(--paper),inset 0 0 0 6.5px currentColor}
+.stamp b{display:block;font-family:var(--sans);font-weight:900;font-size:19px;letter-spacing:.12em}
+.stamp small{font-family:var(--type);font-size:12.5px}
+.stamp[aria-checked="true"]{color:var(--red)}
+.seednote{margin:16px 0 0 8px;font-size:14.5px;max-width:30em;min-height:4.8em;line-height:1.65}
+.goes{display:flex;align-items:center;gap:26px;margin:22px 0 0 6px}
+.bigplay{width:118px;height:118px;flex:none;border:0;border-radius:50%;background:var(--red);color:#fff;cursor:pointer;display:grid;place-items:center;
+  box-shadow:6px 6px 0 var(--ink);transform:rotate(-7deg);transition:transform .12s,box-shadow .12s}
+.bigplay:active{transform:rotate(-7deg) translate(4px,4px);box-shadow:2px 2px 0 var(--ink)}
+.bigplay span{font-family:var(--sans);font-weight:900;font-size:27px;letter-spacing:.06em;line-height:1}
+.bigplay svg{width:16px;height:16px;margin-bottom:6px}
+.bigplay .in{display:flex;flex-direction:column;align-items:center}
+.varybtn{border:0;background:none;cursor:pointer;display:flex;flex-direction:column;align-items:flex-start;padding:4px;color:var(--ink)}
+.varybtn .ill{width:96px;transform:rotate(-6deg)}
+.varybtn span{font-family:var(--hand);font-size:20px;font-weight:700;margin:-4px 0 0 18px}
+
+.right{position:relative;min-width:0}
+.gram{position:absolute;width:128px;right:-10px;top:-46px;transform:rotate(9deg);z-index:5;pointer-events:none}
+@media (max-width:979px){.gram{width:86px;top:-30px;right:-4px}}
+.capline{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 18px;margin:0 0 14px 4px;padding-right:112px;font-size:14px;min-height:64px}
+.capline .pos{font-family:var(--didone);font-style:italic;font-weight:800;font-size:24px;color:var(--red);min-width:3em}
+.legend{display:flex;flex-wrap:wrap;gap:4px 16px;font-size:13px;color:var(--ink2)}
+.legend i{display:inline-block;vertical-align:-2px;margin-right:5px}
+.lg-cut{width:13px;height:13px;background:var(--ink);transform:rotate(-8deg)}
+.lg-stamp{width:13px;height:13px;border-radius:50%;box-shadow:inset 0 0 0 2px var(--red)}
+.lg-bar{width:16px;height:5px;background:var(--ink);transform:skewX(-25deg)}
+.lg-dot{width:12px;height:12px;background:radial-gradient(circle,var(--ink) 1.3px,transparent 1.6px) 0 0/4px 4px}
+.printw{position:relative;filter:drop-shadow(3px 5px 0 var(--shade)) drop-shadow(0 12px 18px rgba(40,28,16,.14));transform:rotate(.7deg)}
+.printw .tape{top:-10px;left:-16px;transform:rotate(-32deg)}
+.printw .tape.b{left:auto;right:-14px;top:auto;bottom:-6px;transform:rotate(-28deg)}
+.print{position:relative;aspect-ratio:4/5;background:var(--sheet);cursor:pointer}
+@media (min-width:980px){.print{aspect-ratio:6/5}}
+.print canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+.tickets{display:flex;flex-wrap:wrap;gap:16px 18px;margin:-22px 0 0;padding:0 2% 0 6%;position:relative;z-index:3}
+.tk{background:var(--sheet);padding:11px 15px 13px;transform:rotate(var(--r,0deg));box-shadow:3px 4px 0 var(--ink);min-width:150px;max-width:300px;flex:1 1 160px;position:relative}
+.tk:nth-child(2){background:var(--news)}
+.tk .k{font-family:var(--type);font-size:13px;color:var(--ink2);display:block;margin-bottom:4px}
+.tk .v{font-size:15px;line-height:1.55}
+.tk .big{display:block;font-family:var(--serif);font-weight:900;font-size:22px;line-height:1.3}
+.tk .num{font-family:var(--didone);font-style:italic;font-weight:800;font-size:19px}
+.kwl{display:flex;flex-wrap:wrap;gap:2px 2px;font-size:17px}
+.chs{display:flex;flex-wrap:wrap;gap:6px 12px}
+.chs span{font-family:var(--didone);font-weight:700;font-size:20px;padding:0 3px;border-bottom:2px solid transparent}
+.chs span.now{color:var(--red);border-bottom-color:var(--red)}
+.why{margin:30px 0 0 4%;max-width:38em;font-family:var(--type);font-size:15px;line-height:1.75;color:var(--ink);transform:rotate(-.4deg)}
+.acts{display:flex;flex-wrap:wrap;align-items:center;gap:18px 22px;margin:30px 0 0 4%}
+.act{border:0;cursor:pointer;padding:7px 14px 8px;font-size:18px;transform:rotate(var(--r,0deg));box-shadow:3px 3px 0 var(--shade);line-height:1.2}
+.act.a1{background:var(--ink);color:var(--paper);font-family:var(--sans);font-weight:900}
+.act.a2{background:var(--red);color:#fff;font-family:var(--serif);font-weight:900}
+.act.a3{background:none;box-shadow:none;font-family:var(--hand);font-weight:700;color:var(--ink)}
+.act.a3 span{border-bottom:2px solid var(--ink)}
+.acts .ill{width:70px;transform:rotate(-14deg)}
+
+/* ---------- 原理 ---------- */
+.man{max-width:880px;position:relative}
+.m-title{font-size:clamp(32px,6vw,58px);line-height:1.1;margin:10px 0 18px}
+.eye{position:absolute;width:130px;right:0;top:0;transform:rotate(-8deg)}
+@media (max-width:700px){.eye{width:80px;top:-10px}}
+.m-lede{max-width:34em;font-size:15.5px}
+.mnow{margin:26px 0 34px;padding:14px 18px 16px;background:var(--sheet);box-shadow:3px 4px 0 var(--ink);transform:rotate(.5deg);max-width:40em;font-size:15.5px}
+.mnow b{font-family:var(--didone);font-weight:800;font-style:italic;color:var(--red)}
+.flow{font-family:var(--hand);font-size:21px;font-weight:700;margin:0 0 44px;line-height:2}
+.flow i{font-style:normal;color:var(--red);margin:0 .35em}
+.mpt{position:relative;margin:0 0 54px;padding-left:96px;max-width:44em}
+.mpt:nth-of-type(even){margin-left:6%}
+.mpt .n{position:absolute;left:0;top:-12px;font-family:var(--didone);font-style:italic;font-weight:800;font-size:84px;line-height:1;color:var(--ink)}
+.mpt:nth-of-type(3n+2) .n{color:var(--red)}
+.mpt h2{margin:0 0 12px;font-family:var(--sans);font-weight:900;font-size:24px;letter-spacing:.04em;line-height:1.35}
+.mpt p{margin:0 0 12px}
+.mpt ul{margin:0 0 12px;padding-left:1.1em}
+.mpt li{margin:0 0 9px}
+.mpt li::marker{content:"✕  ";color:var(--red);font-size:.8em}
+.mpt code{font-family:var(--type);font-size:15px;background:var(--yellow);color:#171513;padding:0 5px}
+@media (max-width:620px){.mpt{padding-left:64px}.mpt:nth-of-type(even){margin-left:0}.mpt .n{font-size:58px}}
+.pull{margin:-10px 0 56px 12%;font-family:var(--serif);font-weight:900;font-size:clamp(24px,3.6vw,36px);line-height:1.3;color:var(--red);transform:rotate(-2deg);max-width:16em}
+.pull.k{color:var(--ink);margin-left:0;transform:rotate(1.4deg)}
+.duo{display:grid;gap:22px;margin:6px 0 16px}
+@media (min-width:700px){.duo{grid-template-columns:1fr 1fr}}
+.duo > div{padding:16px 18px 6px;background:var(--sheet);box-shadow:3px 4px 0 var(--shade);transform:rotate(-.6deg)}
+.duo > div + div{background:var(--news);transform:rotate(.8deg)}
+.duo h3{margin:0 0 6px;font-family:var(--sans);font-weight:900;font-size:18px}
+.duo p{font-size:15px}
+.bandw{position:relative;margin:14px 0 8px;padding:0 0 26px 34px}
+.bands{display:grid;grid-template-columns:repeat(5,1fr);height:160px;position:relative}
+.bands div{display:flex;align-items:flex-end;justify-content:center;padding:0 2px 8px;font-size:12.5px;text-align:center;line-height:1.35;color:var(--ink);font-family:var(--hand);font-weight:700}
+.bands div:nth-child(1){background:radial-gradient(circle,var(--dot) 2.2px,transparent 2.6px) 0 0/7px 7px}
+.bands div:nth-child(2){background:radial-gradient(circle,var(--dot) 1.6px,transparent 2px) 0 0/7px 7px}
+.bands div:nth-child(3){background:radial-gradient(circle,var(--dot) 1px,transparent 1.3px) 0 0/7px 7px}
+.bands div:nth-child(4){background:radial-gradient(circle,var(--dot) .6px,transparent .9px) 0 0/7px 7px}
+.bands div:nth-child(5){background:var(--sheet)}
+.bands div span{background:var(--paper);padding:0 4px}
+.mdot{position:absolute;width:24px;height:24px;border-radius:50%;transform:translate(-50%,-50%);box-shadow:inset 0 0 0 3px var(--red),0 0 0 3px var(--paper);background:radial-gradient(circle,var(--red) 4px,transparent 4.5px)}
+.axy{position:absolute;left:0;top:0;bottom:26px;display:flex;flex-direction:column;justify-content:space-between;font-family:var(--type);font-size:12px;color:var(--ink2)}
+.axx{display:flex;justify-content:space-between;font-family:var(--type);font-size:12px;color:var(--ink2);margin-top:6px}
+.slip{background:var(--sheet);box-shadow:3px 4px 0 var(--shade);padding:8px 14px;overflow-x:auto;margin:10px 0 16px;transform:rotate(-.5deg)}
+.slip table{border-collapse:collapse;width:100%;font-family:var(--type);font-size:14px}
+.slip th,.slip td{padding:6px 10px;border-bottom:1px dashed var(--rule);text-align:left;white-space:nowrap}
+.slip th{font-weight:400;color:var(--ink3);font-size:12.5px}
+.slip td.c{font-family:var(--serif);font-weight:900;font-size:19px}
+.hint{font-size:14px;color:var(--ink2);margin:8px 0 0}
+.mill{float:right;width:120px;margin:0 0 10px 18px;transform:rotate(6deg)}
+
+/* ---------- 調音 ---------- */
+.t-head{position:relative;margin:0 0 30px}
+.t-title{font-size:clamp(32px,6vw,58px);line-height:1.1;margin:10px 0 14px}
+.gearill{position:absolute;width:120px;right:4%;top:-8px}
+@media (max-width:700px){.gearill{width:74px;right:0}}
+.t-grid{display:grid;gap:44px 54px}
+@media (min-width:980px){.t-grid{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}.t-grid .wide{grid-column:1/-1}}
+.t-sec h2{display:inline-block;margin:0 0 16px;font-family:var(--hand);font-weight:700;font-size:24px}
+.t-sec h2 small{font-family:var(--type);font-weight:400;font-size:14px;color:var(--ink3);margin-left:10px}
+.form{display:grid;grid-template-columns:88px minmax(0,1fr);gap:14px 16px;align-items:center;font-family:var(--type)}
+.form > label{font-size:15px;color:var(--ink2)}
+select{appearance:none;-webkit-appearance:none;border:0;border-bottom:2px solid var(--ink);border-radius:0;background:transparent url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='8'><path d='M1 1l5 5 5-5' fill='none' stroke='%23d23a22' stroke-width='2'/></svg>") no-repeat right 4px center;
+  font-family:var(--type);font-size:16px;padding:5px 26px 4px 2px;width:100%;cursor:pointer}
+select option{background:var(--sheet);color:var(--ink)}
+.pick{display:flex;gap:16px;flex-wrap:wrap}
+.pick button{border:0;background:none;cursor:pointer;padding:2px 2px 4px;font-family:var(--sans);font-weight:900;font-size:16px;color:var(--ink3)}
+.pick button[aria-checked="true"]{color:var(--ink)}
+.pick button[aria-checked="true"] span{background:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 40' preserveAspectRatio='none'><path d='M8 22C6 6 50 2 84 8S96 34 52 36 4 32 12 14' fill='none' stroke='%23d23a22' stroke-width='3' stroke-linecap='round'/></svg>") no-repeat center/120% 150%;padding:2px 8px}
+.vrow{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.vrow output{font-family:var(--didone);font-style:italic;font-weight:800;font-size:19px;min-width:4.2em}
+.link{border:0;background:none;cursor:pointer;font-family:var(--hand);font-weight:700;font-size:17px;padding:2px 0;border-bottom:2px solid var(--ink)}
+.link:disabled{opacity:.35;cursor:not-allowed}
+.knob{display:grid;grid-template-columns:88px minmax(0,1fr) 56px;gap:14px;align-items:center;padding:8px 0;font-family:var(--type)}
+.knob label{font-size:15px;color:var(--ink2)}
+.knob output{font-family:var(--didone);font-weight:800;font-style:italic;font-size:19px;text-align:right}
+input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:26px;background:transparent;margin:0;--p:50%}
+input[type=range]::-webkit-slider-runnable-track{height:2px;background:linear-gradient(90deg,var(--red) 0 var(--p),var(--ink) var(--p))}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:14px;height:22px;margin-top:-10px;background:var(--red);box-shadow:2px 2px 0 var(--ink)}
+input[type=range]::-moz-range-track{height:2px;background:linear-gradient(90deg,var(--red) 0 var(--p),var(--ink) var(--p))}
+input[type=range]::-moz-range-thumb{width:14px;height:22px;border:0;border-radius:0;background:var(--red);box-shadow:2px 2px 0 var(--ink)}
+.roll{position:relative;background:var(--sheet);padding:24px 14px;overflow-x:auto;-webkit-overflow-scrolling:touch;overscroll-behavior-x:contain;box-shadow:3px 4px 0 var(--shade);
+  background-image:radial-gradient(circle,var(--paper) 3px,transparent 3.6px),radial-gradient(circle,var(--paper) 3px,transparent 3.6px);
+  background-size:16px 16px,16px 16px;background-repeat:repeat-x;background-position:0 4px,0 calc(100% - 4px)}
+.matrix{display:grid;gap:2px;position:relative;width:max-content}
+.lab{position:sticky;left:0;z-index:3;background:var(--sheet);font-family:var(--type);font-size:13px;color:var(--ink2);display:flex;align-items:center;justify-content:flex-end;padding-right:9px;white-space:nowrap}
+.hd{font-family:var(--didone);font-style:italic;font-size:14px;color:var(--ink3);text-align:center;align-self:end;line-height:1}
+.hd.bar{color:var(--red);font-weight:800;font-size:17px;text-align:left}
+.chd{display:flex;align-items:center;justify-content:center;gap:8px;color:var(--red);border:2px solid var(--red);border-radius:30px;background:var(--sheet);transform:rotate(-.6deg)}
+.chd b{font-family:var(--didone);font-weight:700;font-size:18px}
+.chd i{font-family:var(--type);font-style:normal;font-size:12px}
+.chd.now{background:var(--red);color:#fff}
+.c{position:relative;cursor:pointer;box-shadow:inset 0 0 0 .5px var(--rule)}
+.c.ct{background:repeating-linear-gradient(45deg,var(--hatch) 0 1px,transparent 1px 5px)}
+.c.on{background:var(--ink)}
+.c.tail{background:var(--tail)}
+.c.bs.on{background:var(--red)}.c.bs.tail{background:var(--red-soft)}
+.c.d.on{background:none}
+.c.d.on::after{content:"";position:absolute;inset:22%;border-radius:50%;background:var(--ink);opacity:calc(.35 + var(--v) * .65)}
+.jp{position:relative;font-family:var(--didone);font-style:italic;font-weight:800;font-size:16px;color:var(--ink)}
+.jp.zh{font-family:var(--hand);font-style:normal;font-weight:700;font-size:14px}
+.jp .dot{position:absolute;left:50%;top:-3px;width:3px;height:3px;border-radius:50%;background:currentColor;transform:translateX(-50%)}
+.ph{position:absolute;inset:-4px -1px;border-left:2px solid var(--red);background:rgba(210,58,34,.1);pointer-events:none;z-index:2}
+.track{display:grid;grid-template-columns:66px minmax(0,1fr) 40px;grid-template-areas:"n s m" "n v v";gap:8px 14px;align-items:center;padding:12px 0;border-bottom:1px dashed var(--rule)}
+.track:last-of-type{border-bottom:0}
+.tname{grid-area:n;font-family:var(--sans);font-weight:900;font-size:16px}
+.track select{grid-area:s}.track input{grid-area:v}.track .mute{grid-area:m}
+@media (min-width:560px){.track{grid-template-columns:70px minmax(0,1.1fr) minmax(0,1fr) 40px;grid-template-areas:"n s v m"}}
+.mute{width:36px;height:36px;border:0;cursor:pointer;background:none;font-family:var(--hand);font-weight:700;font-size:16px;color:var(--ink3);box-shadow:inset 0 0 0 1.5px currentColor}
+.mute[aria-pressed="true"]{background:var(--red);color:#fff;box-shadow:none}
+.switch{display:flex;align-items:center;gap:12px;margin-top:16px;font-family:var(--type);font-size:15px;cursor:pointer}
+.switch input{appearance:none;-webkit-appearance:none;width:22px;height:22px;margin:0;cursor:pointer;box-shadow:inset 0 0 0 2px var(--ink);position:relative;flex:none}
+.switch input:checked::after{content:"✕";position:absolute;inset:0;display:grid;place-items:center;color:var(--red);font-family:var(--grot);font-size:17px;line-height:1}
+.twin{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:16px}
+.twin figure{margin:0;display:flex;flex-direction:column;align-items:center;gap:8px}
+.twin figcaption{font-family:var(--type);font-size:12.5px;color:var(--ink2);text-align:center;line-height:1.5}
+.emo{display:grid;grid-template-columns:repeat(9,1fr);gap:4px;width:min(100%,150px);aspect-ratio:1}
+.emo span{border-radius:50%;background:var(--rule)}
+.emo span.ax{background:var(--tail)}.emo span.hit{background:var(--red);transform:scale(1.5)}
+.hgrid{display:grid;grid-template-columns:repeat(8,1fr);gap:2px;width:min(100%,130px);aspect-ratio:1;padding:7px;box-shadow:inset 0 0 0 2.5px var(--red);transform:rotate(-3deg)}
+.hgrid span.on{background:var(--red)}
+.stats{display:grid;grid-template-columns:auto auto;gap:0 10px;font-family:var(--type);font-size:13px;color:var(--ink2)}
+.stats b{font-family:var(--didone);font-weight:800;font-style:italic;font-size:15px;color:var(--ink);text-align:right}
+.gloss{margin:0;font-size:15px;line-height:1.85}
+
+/* ---------- dialog ---------- */
+dialog{border:0;padding:0;background:var(--sheet);color:var(--ink);width:min(1020px,95vw);max-width:95vw;max-height:94vh;overflow:auto;box-shadow:10px 12px 0 var(--ink)}
+dialog::backdrop{background:rgba(20,17,13,.55)}
+.dh{display:flex;flex-wrap:wrap;align-items:center;gap:10px 22px;padding:16px 20px 12px;border-bottom:1.5px solid var(--ink);position:sticky;top:0;background:var(--sheet);z-index:3}
+.dh .ttl{font-size:26px}
+.dh .ill{width:70px;transform:rotate(-10deg)}
+.dh .x{margin-left:auto}
+.db{display:grid;gap:26px;padding:20px 20px 26px}
+@media (min-width:800px){.db{grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:34px;padding:24px 26px 30px}}
+.pvc{display:flex;flex-direction:column;gap:14px;min-width:0}
+.pvbox{display:flex;justify-content:center;padding:18px 10px;background:var(--paper);position:relative}
+.pvbox .tape{top:4px;left:calc(50% - 48px);transform:rotate(-3deg)}
+.pvbox canvas{display:block;max-width:100%;max-height:56vh;width:auto;height:auto;box-shadow:3px 4px 0 var(--shade)}
+.recbar{height:7px;background:var(--rule);position:relative}
+.recbar i{position:absolute;inset:0 auto 0 0;width:0;background:var(--red)}
+.pvnote{margin:0;font-family:var(--type);font-size:13px;color:var(--ink2);line-height:1.6}
+.oc{display:flex;flex-direction:column;gap:16px;min-width:0}
+.oc > label{font-family:var(--type);font-size:14px}
+.cap{display:block;width:100%;min-height:170px;border:0;outline:none;padding:12px 14px;resize:vertical;font-family:var(--hand);font-size:16px;line-height:1.75;background:var(--paper);box-shadow:inset 0 0 0 1.5px var(--ink)}
+.row{display:flex;flex-wrap:wrap;gap:12px 16px;align-items:center}
+.lnk{border:0;cursor:pointer;text-decoration:none;color:var(--ink);background:none;font-family:var(--sans);font-weight:900;font-size:15px;padding:5px 11px;box-shadow:inset 0 0 0 2px var(--ink);display:inline-block;line-height:1.3}
+.lnk.ink{background:var(--ink);color:var(--paper)}
+.lnk.red{background:var(--red);color:#fff;box-shadow:none}
+.lnk:disabled{opacity:.4;cursor:not-allowed}
+.dlo{border:0;background:none;text-align:left;cursor:pointer;padding:12px 4px 14px;display:grid;grid-template-columns:auto 1fr auto;gap:2px 14px;align-items:baseline;border-bottom:1.5px dashed var(--rule)}
+.dlo b{font-family:var(--sans);font-weight:900;font-size:19px}
+.dlo .no{grid-row:1/3;font-family:var(--didone);font-style:italic;font-weight:800;font-size:30px;color:var(--red);line-height:1}
+.dlo span{grid-column:2;font-size:14px;color:var(--ink2);line-height:1.6}
+.dlo em{grid-row:1/3;grid-column:3;font-style:normal;font-family:var(--type);color:var(--ink3)}
+.dlo:disabled{opacity:.45;cursor:not-allowed}
+.ostat{min-height:1.6em;margin:0;font-family:var(--type);font-size:14px;color:var(--red)}
+.tabs2{display:flex;gap:16px}
+.tabs2 button{border:0;background:none;cursor:pointer;font-family:var(--sans);font-weight:900;font-size:17px;color:var(--ink3);padding:2px 0 4px}
+.tabs2 button[aria-selected="true"]{color:var(--ink)}
+.tabs2 button[aria-selected="true"] span{background:var(--yellow);color:#171513;padding:1px 6px}
+
+/* floating play stamp */
+.float{position:fixed;right:0;bottom:0;z-index:30;padding:0 18px calc(18px + env(safe-area-inset-bottom,0px)) 0;pointer-events:none}
+.fplay{pointer-events:auto;width:60px;height:60px;border:0;border-radius:50%;background:var(--ink);color:var(--paper);cursor:pointer;display:grid;place-items:center;box-shadow:4px 4px 0 var(--red);transform:rotate(-8deg)}
+.fplay svg{width:18px;height:18px}
+.fplay[aria-pressed="true"]{background:var(--red);color:#fff;box-shadow:4px 4px 0 var(--ink)}
+.toast{position:fixed;left:50%;bottom:calc(92px + env(safe-area-inset-bottom,0px));transform:translateX(-50%) rotate(-1deg);z-index:60;background:var(--ink);color:var(--paper);
+  padding:8px 16px;font-family:var(--type);font-size:14px;max-width:88vw;opacity:0;transition:opacity .25s;pointer-events:none}
+.toast.on{opacity:1}
+.colophon{max-width:1240px;margin:0 auto;padding:10px 18px 110px;font-family:var(--type);font-size:13px;color:var(--ink2);display:flex;flex-wrap:wrap;gap:6px 26px}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<header class="mast">
+  <a class="logo" href="#loom" data-go="loom" aria-label="文韻織機，回到首頁"><span class="ransom" data-t="文韻織機"></span></a>
+  <p class="issue typed"><b>No. 3</b>　一台把文字剪貼成音樂的機器<br>不需伺服器，不需模型，不收分文</p>
+  <nav class="nav" aria-label="頁面">
+    <button data-go="loom" style="--r:-3deg"><span>織樂</span></button>
+    <button data-go="method" style="--r:2deg"><span>原理</span></button>
+    <button data-go="tune" style="--r:-1.5deg"><span>調音</span></button>
+  </nav>
+</header>
+<div class="rule" aria-hidden="true"><svg viewBox="0 0 1000 14" preserveAspectRatio="none"><path d="M0 7C120 3 260 11 420 6S760 4 1000 8"/><path d="M0 11C200 9 520 13 1000 11" opacity=".5"/></svg></div>
+
+<main class="wrap">
+  <!-- ============ 織樂 ============ -->
+  <section class="view" id="v-loom" aria-labelledby="t-loom">
+    <div class="loom">
+      <div class="left">
+        <h1 class="hero" id="t-loom"><span class="ransom" data-t="寫一句話，&#10;聽它變成音樂。"></span></h1>
+        <p class="lede typed">文字就是種子。可以讀它的意思，也可以只看字的形狀；兩種讀法，會長出不同的音樂。</p>
+        <div class="sheetw">
+          <span class="tape"></span><span class="tape b"></span>
+          <div class="ill handpt" data-ill="hand"></div><span class="note">寫在這裡</span>
+          <div class="sheet ruled torn" data-seed="11"><textarea id="text" spellcheck="false" aria-label="輸入文字" placeholder="寫下一句話、一首詩，或一段文章"></textarea></div>
+        </div>
+        <div class="clips" id="samples" aria-label="範例文字"></div>
+        <div class="seeds" role="radiogroup" aria-label="讀法">
+          <button class="stamp" role="radio" data-mode="semantic" aria-checked="true" style="--r:-3deg"><b>讀意思</b><small>語意種子</small></button>
+          <button class="stamp" role="radio" data-mode="glyph" aria-checked="false" style="--r:2.5deg"><b>讀字形</b><small>文字種子</small></button>
+        </div>
+        <p class="seednote typed" id="seedNote"></p>
+        <div class="goes">
+          <button class="bigplay" id="listen"><span class="in"><svg viewBox="0 0 16 16" aria-hidden="true"><path class="pi" d="M3 1.5v13L14.5 8z" fill="currentColor"/></svg><span>聆聽</span></span></button>
+          <button class="varybtn" id="vary" aria-label="變奏：保留調性，重新編排"><span class="ill" data-ill="arrow"></span><span>變奏</span></button>
+        </div>
+      </div>
+
+      <div class="right">
+        <div class="ill gram" data-ill="gramophone"></div>
+        <div class="capline"><span class="pos" id="pos">I.1</span><span class="typed" id="sst"></span>
+          <span class="legend" aria-hidden="true"><span><i class="lg-cut"></i>剪下的字是旋律</span><span><i class="lg-stamp"></i>紅印是和聲</span><span><i class="lg-bar"></i>黑槓是低音</span><span><i class="lg-dot"></i>網點隨節奏震動</span></span></div>
+        <div class="printw">
+          <span class="tape"></span><span class="tape b"></span>
+          <div class="print torn" data-seed="23" id="stageBox" role="img" aria-label="文字樂譜：四行是四個小節；每個剪下的字是一個旋律音，貼得越高音越高；點一下可播放或停止"><canvas id="stage"></canvas></div>
+        </div>
+        <div class="tickets">
+          <div class="tk" style="--r:-2deg"><span class="k">讀到</span><div class="v" id="roRead"></div></div>
+          <div class="tk" style="--r:1.5deg"><span class="k">定調</span><div class="v" id="roKey"></div></div>
+          <div class="tk" style="--r:-1deg"><span class="k">和聲</span><div class="v" id="roCh"></div></div>
+        </div>
+        <p class="why" id="why"></p>
+        <div class="acts">
+          <span class="ill" data-ill="scissors"></span>
+          <button class="act a1" id="openShare" style="--r:-3deg">分享</button>
+          <button class="act a2" id="openDl" style="--r:2deg">下載</button>
+          <button class="act a3" data-go="tune" style="--r:-1deg"><span>細調</span></button>
+          <button class="act a3" data-go="method" style="--r:1.5deg"><span>原理</span></button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 原理 ============ -->
+  <section class="view man" id="v-method" hidden aria-labelledby="t-method">
+    <div class="ill eye" data-ill="eye"></div>
+    <h1 class="m-title" id="t-method"><span class="ransom" data-t="文字如何&#10;變成音樂"></span></h1>
+    <p class="m-lede">這裡沒有伺服器，也沒有 AI 模型。每段音樂都是你的瀏覽器依照一套固定的規則，從文字一步步推算出來的。</p>
+    <p class="mnow" id="mNow"></p>
+    <p class="flow" aria-label="流程：文字、種子、調與和聲、旋律、聲音、畫面">文字<i>→</i>種子<i>→</i>調與和聲<i>→</i>旋律<i>→</i>聲音<i>→</i>畫面</p>
+
+    <article class="mpt"><span class="n">1</span>
+      <h2>兩種讀法</h2>
+      <div class="duo">
+        <div><h3>讀意思（語意種子）</h3>
+          <p>內建 <b id="lexN">300</b> 個中英文詞語。每個詞有兩個分數：<b>效價</b>表示愉快的程度，<b>張力</b>表示激動的程度，範圍都是 −1 到 +1；另外帶有意象標籤，例如夜、水、自然、懷舊、夢、風暴。</p>
+          <p>「不、沒有、never」讓語氣反轉，「很、非常、very」加重分量，驚嘆號提高張力，刪節號讓它緩下來。所有命中的詞加權平均，就是一個情緒座標。</p></div>
+        <div><h3>讀字形（文字種子）</h3>
+          <p>完全不管意思。電腦裡每個字都有一個編號，叫 Unicode 碼位，例如「月」是 26376、「A」是 65。這些編號直接決定每一個音。</p>
+          <p>整段文字另外算出一個 64 位元的雜湊值，決定主音、調式、速度與和聲。</p></div>
+      </div>
+    </article>
+    <p class="pull">同一段文字，<br>永遠得到同一段音樂。</p>
+
+    <article class="mpt"><span class="n">2</span>
+      <h2>情緒座標決定調式與速度</h2>
+      <p>效價決定調式的明暗，越正向越明亮。張力決定速度（每分鐘 62 到 150 拍）、旋律密度、鼓組型態與低音的律動。帶有夢、雲、疑問的文字改用漂浮感的利地亞調式；中文裡出現自然、夜晚、懷舊等意象時，旋律收進五聲音階。</p>
+      <div class="bandw">
+        <div class="axy"><span>動</span><span>靜</span></div>
+        <div class="bands" id="bands">
+          <div><span>小調<br>弗里吉亞</span></div><div><span>小調</span></div><div><span>多利亞</span></div><div><span>大調<br>混合利地亞</span></div><div><span>大調</span></div>
+          <span class="mdot" id="mdot"></span>
+        </div>
+        <div class="axx"><span>−1 悲</span><span>效價</span><span>喜 +1</span></div>
+      </div>
+      <p class="hint" id="mapNote"></p>
+    </article>
+
+    <article class="mpt"><span class="n">3</span>
+      <h2>碼位變成音符</h2>
+      <ul>
+        <li><b>音高</b>：每個字讓旋律往上或往下走幾級，移動量是 <code>(碼位 × 7 + 字序) mod 5 − 2</code>，也就是 −2 到 +2 級；碼位剛好是 11 的倍數時，改成一次大跳。</li>
+        <li><b>時值</b>：取碼位的二進位位元查表，得到 1、2 或 3 個八分音符。</li>
+        <li><b>標點</b>：逗號、頓號變成一個八分休止；句號、問號、驚嘆號變成兩個。</li>
+        <li>文字不夠填滿四小節時，從頭再讀一次，像歌曲的反覆段。</li>
+      </ul>
+      <p>你目前文字的前幾個字，是這樣變成音的：</p>
+      <div class="slip"><table><thead><tr><th>字</th><th>碼位</th><th>音高移動</th><th>時值</th><th>結果</th></tr></thead><tbody id="trace"></tbody></table></div>
+    </article>
+    <p class="pull k">改一個字，<span class="scrib">整首曲子都不同。</span></p>
+
+    <article class="mpt"><span class="n">4</span>
+      <h2>樂理的保證</h2>
+      <ul>
+        <li><b>和聲進行</b>：從每個調式最常見的進行中挑選，例如大調的 I–V–vi–IV、小調的 i–VI–III–VII、多利亞的 i–IV。</li>
+        <li><b>強拍吸附</b>：落在第一、三拍的旋律音一定是當下和弦的組成音，弱拍才允許經過音與鄰音。這是聽起來「順」的主要原因。</li>
+        <li><b>樂句結構</b>：讀意思時，旋律採 A–A′–B–A″：第一小節是動機，第二、四小節把動機搬到新的和弦上，所以容易記住。</li>
+        <li><b>聲部進行</b>：每個和弦選擇與前一個和弦移動最少的轉位。</li>
+        <li><b>終止</b>：小調在句尾借用和聲小調的屬和弦，例如 A 小調的 E 大三和弦；最後一個音落在主音或和弦根音，循環回到開頭時才有回家的感覺。</li>
+      </ul>
+    </article>
+
+    <article class="mpt"><span class="n">5</span>
+      <div class="ill mill" data-ill="gear"></div>
+      <h2>聲音從哪裡來</h2>
+      <ul>
+        <li><b>基本波形</b>：Web Audio 的正弦、三角、方波、鋸齒振盪器，加上音量包絡與濾波。</li>
+        <li><b>模擬採樣</b>：先用演算法「錄」出一個單音，再像取樣器一樣依音高變速播放。鋼琴是 16 個略為偏高的泛音疊加，古箏與撥弦貝斯用 Karplus–Strong 撥弦演算法，電鋼琴用 FM 調頻合成，鼓是掃頻正弦波與濾波雜訊。</li>
+        <li><b>空間</b>：殘響是即時生成的一段衰減雜訊，當作房間的脈衝響應。</li>
+        <li><b>匯出</b>：下載純音樂時，整首曲子在離線音訊環境中重算一遍，得到無損的 WAV；可無縫循環的版本取自第二輪，前一輪的殘響尾巴也在裡面。</li>
+      </ul>
+    </article>
+
+    <article class="mpt"><span class="n">6</span>
+      <h2>畫面怎麼讀</h2>
+      <ul>
+        <li>四行是四個小節，像一首四行詩。每張剪下來貼上的字是一個旋律音，貼得越高，音越高；字後面的紅線是音的長度，黑色細線把旋律串起來。</li>
+        <li>讀字形時，紙片上的字就是產生那個音的字；讀意思時，文字依序填進旋律，像歌詞。角落有紅色星號的字，是帶有情緒的關鍵詞。</li>
+        <li>左邊的紅色印章是和聲，底部的黑槓是低音，上方的小圓點、叉叉與短線是大鼓、小鼓與鈸。</li>
+        <li>背景是報紙的網點。每個音都會在網點上推出一圈漣漪，大鼓讓整片網點膨脹一次。</li>
+      </ul>
+    </article>
+
+    <article class="mpt"><span class="n">7</span>
+      <h2>可以重現，也可以變奏</h2>
+      <p>所有「隨機」都來自以文字雜湊為種子的偽隨機數，所以結果可以重現。「變奏」只換旋律與節奏的編排，保留調與和聲；到調音頁可以手動指定主音、調式與音階，或逐格改寫旋律。</p>
+      <div class="row"><button class="act a1" data-go="loom" style="--r:-2deg">回到織樂</button><button class="act a3" data-go="tune"><span>前往調音</span></button></div>
+    </article>
+  </section>
+
+  <!-- ============ 調音 ============ -->
+  <section class="view" id="v-tune" hidden aria-labelledby="t-tune">
+    <div class="t-head">
+      <div class="ill gearill" data-ill="gear"></div>
+      <h1 class="t-title" id="t-tune"><span class="ransom" data-t="調音室"></span></h1>
+      <p class="typed">所有細節都在這裡：指定調性、換音色、調整混音，或在自動鋼琴紙捲上逐格改寫旋律與節奏。</p>
+    </div>
+    <div class="t-grid">
+      <section class="t-sec">
+        <h2 class="scrib">調性<small>key</small></h2>
+        <div class="form">
+          <label>讀法</label>
+          <div class="pick" role="radiogroup" aria-label="讀法"><button role="radio" data-mode="semantic" aria-checked="true"><span>讀意思</span></button><button role="radio" data-mode="glyph" aria-checked="false"><span>讀字形</span></button></div>
+          <label for="ovKey">主音</label><select id="ovKey"></select>
+          <label for="ovMode">調式</label><select id="ovMode"></select>
+          <label for="ovScale">旋律音階</label><select id="ovScale"><option value="">自動</option><option value="hepta">七聲音階</option><option value="pent">五聲音階</option></select>
+          <label>變奏</label>
+          <div class="vrow"><output id="varOut">原版</output><button class="link" id="varPrev">上一版</button><button class="link" id="varNext">下一版</button></div>
+        </div>
+      </section>
+      <section class="t-sec">
+        <h2 class="scrib">律動與混音<small>mix</small></h2>
+        <div class="knob"><label for="tempo">速度</label><input type="range" id="tempo" min="56" max="160" step="1"><output id="tempoOut"></output></div>
+        <div class="knob"><label for="swing">搖擺</label><input type="range" id="swing" min="0" max="100" step="1"><output id="swingOut"></output></div>
+        <div class="knob"><label for="reverb">殘響</label><input type="range" id="reverb" min="0" max="100" step="1"><output id="reverbOut"></output></div>
+        <div class="knob"><label for="master">總音量</label><input type="range" id="master" min="0" max="100" step="1"><output id="masterOut"></output></div>
+      </section>
+      <section class="t-sec wide">
+        <h2 class="scrib">自動鋼琴紙捲<small>score</small></h2>
+        <div class="roll" id="mwrap"><div class="matrix" id="matrix"></div></div>
+        <p class="hint typed">點一下格子就能打孔、移動或刪除旋律音，或開關鼓點。斜線格是那一小節的和弦音，放在那裡最協和。</p>
+      </section>
+      <section class="t-sec">
+        <h2 class="scrib">音色<small>timbre</small></h2>
+        <div id="tracks"></div>
+        <label class="switch"><input type="checkbox" id="auto" checked><span>依文意自動配器</span></label>
+      </section>
+      <section class="t-sec">
+        <h2 class="scrib">判讀細節<small>reading</small></h2>
+        <div class="twin">
+          <figure><div class="emo" id="emo"></div><figcaption>情緒座標<br>橫軸悲喜，縱軸動靜</figcaption></figure>
+          <figure><div class="hgrid" id="hgrid"></div><div class="stats" id="gstats"></div></figure>
+        </div>
+        <p class="gloss" id="gloss"></p>
+      </section>
+    </div>
+  </section>
+</main>
+<footer class="colophon"><span>所有聲音都在瀏覽器裡即時合成，不需伺服器，也不需任何模型。</span><span>iPhone 若沒有聲音，請關閉側邊的靜音開關。</span></footer>
+
+<div class="float"><button class="fplay" id="hplay" aria-label="播放" aria-pressed="false"><svg viewBox="0 0 16 16" aria-hidden="true"><path class="pi" d="M3 1.5v13L14.5 8z" fill="currentColor"/></svg></button></div>
+
+<dialog id="out" aria-label="分享與下載">
+  <div class="dh">
+    <span class="ttl ransom" data-t="剪下帶走"></span>
+    <span class="ill" data-ill="scissors"></span>
+    <div class="tabs2" role="tablist"><button role="tab" data-tab="share" aria-selected="true"><span>分享</span></button><button role="tab" data-tab="dl" aria-selected="false"><span>下載</span></button></div>
+    <button class="lnk x" id="closeOut">關閉</button>
+  </div>
+  <div class="db">
+    <div class="pvc">
+      <div class="pick" role="radiogroup" aria-label="版面比例"><button role="radio" data-fmt="post" aria-checked="true"><span>4:5 貼文</span></button><button role="radio" data-fmt="story" aria-checked="false"><span>9:16 限動、短影音</span></button></div>
+      <div class="pvbox"><span class="tape"></span><canvas id="pv" aria-label="分享圖卡預覽"></canvas></div>
+      <div class="recbar" id="recbar" hidden><i id="recFill"></i></div>
+      <p class="pvnote">影片與圖卡都用這個版面。錄影片時請讓這個頁面保持在前景。</p>
+    </div>
+    <div class="oc">
+      <div data-pane="share">
+        <div class="oc">
+          <label for="cap">貼文文案，可以先改再分享</label>
+          <textarea class="cap" id="cap"></textarea>
+          <div class="row"><button class="lnk" id="copyCap">複製文案</button><button class="lnk" id="sysShare" hidden>用系統分享圖卡</button></div>
+          <div class="row">
+            <a class="lnk ink" id="shX" target="_blank" rel="noopener">發到 X</a>
+            <a class="lnk ink" id="shTh" target="_blank" rel="noopener">發到 Threads</a>
+            <a class="lnk ink" id="shLine" target="_blank" rel="noopener">傳到 LINE</a>
+          </div>
+          <p class="pvnote">Instagram 與 Facebook 不接受網頁直接帶入內容：先下載影片或圖卡，再把複製好的文案貼上。</p>
+          <div class="row"><button class="lnk red" data-dl="video">下載影片</button><button class="lnk" data-dl="png">下載圖卡</button></div>
+        </div>
+      </div>
+      <div data-pane="dl" hidden>
+        <div class="oc">
+          <button class="dlo" data-dl="video"><span class="no">i</span><b>影音卡片</b><span id="vidDesc">畫面隨音樂流動，適合 Reels、Shorts 與限時動態。</span><em id="vidExt">.mp4</em></button>
+          <button class="dlo" data-dl="png"><span class="no">ii</span><b>圖卡</b><span>文字、調性與整段樂譜剪貼成一張海報。</span><em>.png</em></button>
+          <button class="dlo" data-dl="audio"><span class="no">iii</span><b>純音樂</b><span>無損 WAV：完整版（四輪循環加淡出）與可無縫循環版，附樂曲資訊。</span><em>.zip</em></button>
+        </div>
+      </div>
+      <p class="ostat" id="ostat" role="status"></p>
+    </div>
+  </div>
+</dialog>
+<div class="toast" id="toast" role="status"></div>
+
+<script id="engine">
+/* ============ Engine: analysis, composition, sample synthesis (no DOM) ============ */
+const Engine = (() => {
+  'use strict';
+  const clamp = (x, a, b) => Math.max(a, Math.min(b, x));
+
+  function hashPair(str, seed = 0) {
+    let h1 = 0xdeadbeef ^ seed, h2 = 0x41c6ce57 ^ seed;
+    for (let i = 0; i < str.length; i++) {
+      const ch = str.charCodeAt(i);
+      h1 = Math.imul(h1 ^ ch, 2654435761);
+      h2 = Math.imul(h2 ^ ch, 1597334677);
+    }
+    h1 = Math.imul(h1 ^ (h1 >>> 16), 2246822507) ^ Math.imul(h2 ^ (h2 >>> 13), 3266489909);
+    h2 = Math.imul(h2 ^ (h2 >>> 16), 2246822507) ^ Math.imul(h1 ^ (h1 >>> 13), 3266489909);
+    return [h1 >>> 0, h2 >>> 0];
+  }
+  function rngFrom(seed) {
+    let a = seed >>> 0;
+    return () => {
+      a = (a + 0x6D2B79F5) >>> 0;
+      let t = a;
+      t = Math.imul(t ^ (t >>> 15), t | 1);
+      t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+      return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+    };
+  }
+  const pick = (r, a) => a[Math.floor(r() * a.length)];
+
+  /* ---------- music theory tables ---------- */
+  const MODES = {
+    ionian:     { scale: [0, 2, 4, 5, 7, 9, 11], zh: '大調', la: 'Ionian', off: 0, minor: false },
+    lydian:     { scale: [0, 2, 4, 6, 7, 9, 11], zh: '利地亞調式', la: 'Lydian', off: 5, minor: false },
+    mixolydian: { scale: [0, 2, 4, 5, 7, 9, 10], zh: '混合利地亞調式', la: 'Mixolydian', off: 7, minor: false },
+    dorian:     { scale: [0, 2, 3, 5, 7, 9, 10], zh: '多利亞調式', la: 'Dorian', off: 2, minor: true },
+    aeolian:    { scale: [0, 2, 3, 5, 7, 8, 10], zh: '小調', la: 'Aeolian', off: 9, minor: true },
+    phrygian:   { scale: [0, 1, 3, 5, 7, 8, 10], zh: '弗里吉亞調式', la: 'Phrygian', off: 4, minor: true },
+  };
+  const IONIAN = [0, 2, 4, 5, 7, 9, 11];
+  const PENT_MAJ = [0, 2, 4, 7, 9], PENT_MIN = [0, 3, 5, 7, 10];
+  const PROGS = {
+    ionian:     [[0, 4, 5, 3], [0, 5, 3, 4], [3, 4, 2, 5], [5, 3, 0, 4], [0, 3, 4, 3], [0, 2, 3, 4], [3, 0, 4, 5], [0, 3, 5, 4]],
+    lydian:     [[0, 1, 0, 1], [0, 1, 5, 4], [0, 1, 4, 0], [0, 2, 1, 0]],
+    mixolydian: [[0, 6, 3, 0], [0, 4, 6, 3], [0, 6, 0, 3], [3, 6, 0, 0], [0, 5, 6, 0]],
+    dorian:     [[0, 3, 0, 3], [0, 6, 3, 0], [0, 3, 4, 3], [0, 2, 3, 0], [0, 4, 6, 3]],
+    aeolian:    [[0, 5, 2, 6], [0, 3, 4, 0], [0, 6, 5, 6], [0, 5, 3, 4], [5, 6, 0, 0], [0, 3, 6, 2], [0, 2, 5, 4]],
+    phrygian:   [[0, 1, 0, 6], [0, 5, 6, 0], [0, 1, 6, 1], [0, 3, 1, 0], [0, 5, 1, 0]],
+  };
+  const MAXDEG = 9;
+  const SHARP = ['C', 'C♯', 'D', 'D♯', 'E', 'F', 'F♯', 'G', 'G♯', 'A', 'A♯', 'B'];
+  const FLAT = ['C', 'D♭', 'D', 'E♭', 'E', 'F', 'G♭', 'G', 'A♭', 'A', 'B♭', 'B'];
+  const noteName = (pc, flats) => (flats ? FLAT : SHARP)[((pc % 12) + 12) % 12];
+  const COMP = [[0], [0, 4], [0, 3, 6], [0, 2, 4, 6]];
+
+  /* ---------- lexicons: term valence arousal tags ---------- */
+  const ZH_SRC = `
+快樂 .8 .5;開心 .8 .5;高興 .8 .5;喜悅 .8 .4;歡喜 .8 .4;歡 .7 .5;笑 .7 .5;微笑 .7 .1 warm;幸福 .9 .2 warm;愛 .8 .3 warm;喜歡 .7 .3 warm;
+溫暖 .7 0 warm;溫柔 .6 -.3 warm;甜 .6 .2 warm;擁抱 .7 .1 warm;陪伴 .6 -.2 warm;家 .5 -.2 warm;謝謝 .6 0 warm;感謝 .6 0 warm;
+陽光 .7 .4 bright;晴 .6 .3 bright;明亮 .6 .3 bright;發亮 .5 .3 bright;閃 .5 .5 bright;光 .4 .2 bright;金 .4 .2 bright;希望 .7 .3 bright;
+自由 .6 .5;飛 .4 .5 dream;翅膀 .5 .3 dream;夢 .3 -.3 dream;夢想 .6 .3 dream;幻 .2 -.1 dream;星 .4 -.2 night,dream;星空 .5 -.3 night,dream;
+宇宙 .3 -.1 dream;雲 .2 -.3 nature,dream;霧 -.1 -.4 dream;神秘 0 .1 dream;魔法 .5 .3 dream;
+月 .2 -.4 night,nostalgia;明月 .3 -.4 night,nostalgia;月光 .3 -.5 night;夜 -.1 -.4 night;夜空 .1 -.4 night;深夜 -.2 -.4 night;午夜 -.1 -.3 night;
+黑暗 -.6 .1 night;燈 .2 -.3 night,warm;霜 -.2 -.4 cold;雪 .1 -.4 cold;冬 -.2 -.3 cold;寒 -.4 -.2 cold;冷 -.4 -.1 cold;冰 -.2 -.2 cold;
+春 .6 .2 nature;春天 .7 .3 nature;花 .5 .1 nature;草 .3 -.1 nature;夏天 .6 .5 bright;夏 .5 .4 bright;秋 -.1 -.3 nostalgia;秋天 -.1 -.3 nostalgia;
+落葉 -.3 -.4 nostalgia;黃昏 0 -.3 nostalgia;夕陽 .2 -.3 nostalgia;故鄉 .1 -.3 nostalgia;鄉 0 -.3 nostalgia;思 -.1 -.3 nostalgia;思念 -.2 -.3 nostalgia;
+想念 -.1 -.2 nostalgia;懷念 -.1 -.3 nostalgia;回憶 0 -.3 nostalgia;記憶 0 -.2 nostalgia;從前 0 -.3 nostalgia;童年 .3 -.1 nostalgia;舊 -.1 -.3 nostalgia;遠方 .1 -.1 nostalgia;
+雨 -.2 -.2 water;細雨 0 -.5 water;海 .3 .1 water;大海 .4 .2 water;河 .2 -.1 water;江 .2 0 water;水 .2 -.2 water;浪 .2 .4 water;湖 .3 -.4 water;
+溪 .4 -.3 water,nature;山 .3 -.2 nature;風 .1 .2 nature;微風 .5 -.3 nature;森林 .3 -.2 nature;樹 .3 -.2 nature;鳥 .4 .2 nature;田 .3 -.3 nature;
+悲 -.8 -.2;悲傷 -.8 -.2;哀 -.7 -.3;傷心 -.8 -.1;難過 -.7 -.1;哭 -.7 .2;淚 -.6 -.1;眼淚 -.6 -.1;寂寞 -.6 -.4;孤獨 -.6 -.4;孤單 -.6 -.4;孤 -.4 -.3;
+低頭 -.4 -.4;失去 -.7 0;失望 -.6 0;離別 -.6 -.1;別離 -.6 -.1;再見 -.3 -.1;死 -.9 .1;痛 -.7 .4;心碎 -.9 .2;累 -.4 -.5;疲 -.4 -.5;遺憾 -.6 -.2;嘆 -.4 -.3;
+憤怒 -.7 .9 storm;生氣 -.6 .7 storm;怒 -.6 .8 storm;恨 -.8 .6 storm;暴 -.5 .9 storm;風暴 -.4 .9 storm;暴風 -.4 .9 storm;雷 -.3 .8 storm;閃電 -.2 .8 storm;
+撕裂 -.6 .9 storm;火 0 .7 storm;燃燒 .1 .8 storm;戰 -.5 .9 storm;戰爭 -.8 .9 storm;吶喊 -.2 .9 storm;追 0 .6;追趕 -.1 .7;
+奔跑 .4 .8 dance;跑 .3 .7;跳 .4 .7 dance;跳舞 .7 .8 dance;舞 .6 .7 dance;派對 .7 .9 dance;節奏 .3 .7 dance;興奮 .7 .9 dance;熱鬧 .6 .8 dance;
+熱 .3 .6;激動 .3 .8;衝 .2 .8;快 .3 .6;害怕 -.7 .6;恐懼 -.8 .7;緊張 -.4 .7;焦慮 -.6 .6;不安 -.5 .5;怕 -.6 .5;危險 -.6 .7;
+平靜 .4 -.6;安靜 .3 -.6;寧靜 .5 -.7;靜 .3 -.6;慢 .1 -.5;輕 .3 -.4;睡 .2 -.7 dream;休息 .4 -.6;放鬆 .5 -.6;
+禪 .4 -.7 sacred;佛 .4 -.6 sacred;神 .4 -.2 sacred;祈禱 .3 -.4 sacred;寺 .3 -.6 sacred;鐘 .2 -.4 sacred;茶 .4 -.5 sacred;
+城市 .1 .3;街 .1 .2;咖啡 .4 -.2 warm;酒 .1 .1;美 .6 .1;美麗 .7 .1;好 .4 .1;棒 .6 .4;讚 .6 .4;壞 -.5 .2;糟 -.6 .3;討厭 -.6 .4`;
+  const EN_SRC = `
+happy .8 .5;joy .8 .5;joyful .8 .5;glad .7 .4;delight .8 .5;love .8 .3 warm;lovely .7 .2 warm;warm .6 0 warm;smile .7 .3 warm;laugh .7 .6;
+kiss .7 .4 warm;embrace .7 .1 warm;home .5 -.2 warm;friend .6 .2 warm;thank .6 0 warm;tender .6 -.3 warm;gentle .5 -.4 warm;sweet .6 .2 warm;
+bright .6 .4 bright;sun .6 .4 bright;sunny .7 .4 bright;sunshine .7 .4 bright;golden .6 .2 bright;gold .5 .2 bright;light .4 .1 bright;shine .6 .4 bright;
+hope .7 .3 bright;free .6 .5;freedom .6 .5;fly .4 .5 dream;wing .5 .3 dream;dream .3 -.3 dream;star .4 -.2 night,dream;cloud .2 -.3 nature,dream;
+float .3 -.3 dream;wander .1 -.2 dream;mist -.1 -.4 dream;fog -.2 -.4 dream;mystery 0 .1 dream;magic .5 .3 dream;heaven .6 -.2 sacred,dream;
+moon .2 -.4 night,nostalgia;moonlight .3 -.5 night;night -.1 -.4 night;midnight -.1 -.3 night;dark -.5 .1 night;darkness -.6 .1 night;shadow -.3 -.1 night;
+cold -.4 -.2 cold;snow .1 -.4 cold;winter -.2 -.3 cold;frost -.2 -.4 cold;ice -.2 -.2 cold;spring .6 .3 nature;flower .5 .1 nature;daffodil .6 .3 nature;
+bloom .6 .2 nature;garden .5 -.2 nature;summer .6 .5 bright;autumn -.1 -.3 nostalgia;dusk 0 -.3 nostalgia;sunset .2 -.3 nostalgia;memory 0 -.3 nostalgia;
+remember 0 -.3 nostalgia;childhood .3 -.1 nostalgia;old -.1 -.3 nostalgia;yesterday -.1 -.3 nostalgia;rain -.2 -.2 water;sea .3 .1 water;ocean .3 .1 water;
+river .2 -.1 water;wave .2 .4 water;lake .3 -.4 water;stream .4 -.3 water,nature;mountain .3 -.2 nature;hill .3 -.2 nature;vale .3 -.3 nature;
+valley .3 -.3 nature;wind .1 .2 nature;breeze .5 -.3 nature;forest .3 -.2 nature;tree .3 -.2 nature;bird .4 .2 nature;field .3 -.3 nature;
+sad -.8 -.2;sorrow -.8 -.3;grief -.8 -.2;cry -.7 .2;tear -.6 -.1;lonely -.6 -.4;alone -.5 -.4;lost -.6 -.1;goodbye -.5 -.2;farewell -.5 -.2;
+die -.9 .1;death -.9 0;dead -.8 0;pain -.7 .4;hurt -.7 .3;broken -.7 .2;tired -.4 -.5;weary -.5 -.5;regret -.6 -.2;
+angry -.7 .9 storm;anger -.7 .9 storm;rage -.8 .9 storm;hate -.8 .6 storm;fury -.8 .9 storm;storm -.4 .9 storm;thunder -.3 .8 storm;lightning -.2 .8 storm;
+fire 0 .7 storm;burn .1 .8 storm;war -.7 .9 storm;fight -.5 .8 storm;scream -.5 .9 storm;run .3 .7;dance .7 .8 dance;party .7 .9 dance;
+rhythm .3 .7 dance;beat .3 .7 dance;excited .7 .9 dance;exciting .7 .9 dance;wild .3 .8;fast .2 .7;crowd .1 .4;
+fear -.7 .6;afraid -.7 .6;scared -.7 .6;anxious -.6 .6;nervous -.4 .6;danger -.6 .7;calm .4 -.6;quiet .3 -.6;peace .6 -.6;peaceful .6 -.6;
+still .2 -.5;silent .2 -.6;silence .2 -.6;slow .1 -.5;soft .4 -.4;sleep .2 -.7 dream;rest .4 -.6;holy .4 -.4 sacred;pray .3 -.4 sacred;
+prayer .3 -.4 sacred;bell .2 -.3 sacred;temple .3 -.5 sacred;tea .4 -.5;city .1 .3;street .1 .2;coffee .4 -.2 warm;
+beautiful .7 .2;good .4 .1;great .6 .4;wonderful .8 .4;amazing .8 .6;bad -.5 .2;terrible -.7 .4;awful -.7 .3`;
+  const S2T = '乐樂欢歡爱愛温溫阳陽梦夢乡鄉泪淚独獨愤憤风風兴興紧緊张張虑慮宁寧静靜禅禪谢謝伤傷难難过過离離惧懼黄黃叶葉忆憶云雲鸟鳥飞飛热熱发發头頭从從旧舊树樹战戰节節动動险險轻輕坏壞赞讚拥擁开開悦悅赶趕灯燈雾雾恋戀亲親阴陰闹鬧气氣爷爺岁歲时時间間远遠闪閃电電梦夢声聲暴暴龙龍';
+  const s2t = new Map();
+  for (let i = 0; i + 1 < S2T.length; i += 2) s2t.set(S2T[i], S2T[i + 1]);
+  function parseLex(src) {
+    return src.split(';').map(s => s.trim()).filter(Boolean).map(item => {
+      const [t, v, a, g] = item.split(/\s+/);
+      return { t, v: +v, a: +a, g: g ? g.split(',') : [] };
+    });
+  }
+  const ZH_LEX = parseLex(ZH_SRC).sort((a, b) => b.t.length - a.t.length);
+  const EN_MAP = new Map(parseLex(EN_SRC).map(e => [e.t, e]));
+  const EMOJI = [['😊', .8, .3, 'warm'], ['😄', .8, .6, ''], ['😂', .7, .7, ''], ['❤', .8, .3, 'warm'], ['😍', .8, .5, 'warm'], ['🥰', .8, .2, 'warm'],
+    ['😢', -.7, -.1, ''], ['😭', -.8, .3, ''], ['😡', -.7, .9, 'storm'], ['😱', -.6, .8, ''], ['🌙', .2, -.5, 'night'], ['☀', .6, .4, 'bright'],
+    ['🌧', -.2, -.2, 'water'], ['🎉', .8, .9, 'dance'], ['💔', -.8, .2, ''], ['🌸', .6, .1, 'nature'], ['🌊', .3, .3, 'water']];
+
+  function enLookup(w) {
+    const cands = [w, w.replace(/s$/, ''), w.replace(/es$/, ''), w.replace(/ies$/, 'y'), w.replace(/ed$/, ''), w.replace(/d$/, ''),
+      w.replace(/ing$/, ''), w.replace(/ing$/, 'e'), w.replace(/ly$/, ''), w.replace(/ness$/, '')];
+    for (const c of cands) if (c.length > 1 && EN_MAP.has(c)) return EN_MAP.get(c);
+    return null;
+  }
+
+  const SOFT_P = /[，、；：,;:—–\-]/;
+  const HARD_P = /[。！？!?…\.]/;
+  const SKIP_P = /[「」『』（）《》〈〉()\[\]"'“”‘’·]/;
+  const CJK_RE = /[\u3400-\u9fff\uf900-\ufaff]/;
+
+  function analyzeGlyph(text) {
+    const chars = Array.from(text);
+    const ns = chars.filter(c => !/\s/.test(c));
+    const punct = ns.filter(c => SOFT_P.test(c) || HARD_P.test(c) || SKIP_P.test(c)).length;
+    const cjk = ns.filter(c => CJK_RE.test(c)).length;
+    const [h1, h2] = hashPair(text);
+    return {
+      count: ns.length, punct, cjk, cjkRatio: ns.length ? cjk / ns.length : 0, h1, h2,
+      hex: (h2.toString(16).padStart(8, '0') + h1.toString(16).padStart(8, '0')).toUpperCase(),
+    };
+  }
+
+  function analyzeSemantic(text) {
+    const norm = Array.from(text).map(c => s2t.get(c) || c).join('');
+    const hits = [];
+    const covered = new Uint8Array(norm.length);
+    for (const e of ZH_LEX) {
+      let idx = norm.indexOf(e.t);
+      while (idx !== -1) {
+        let free = true;
+        for (let k = idx; k < idx + e.t.length; k++) if (covered[k]) { free = false; break; }
+        if (free) {
+          for (let k = idx; k < idx + e.t.length; k++) covered[k] = 1;
+          const pre = norm.slice(Math.max(0, idx - 2), idx);
+          let v = e.v, a = e.a, w = 1 + 0.25 * (e.t.length - 1);
+          if (/[不沒没無无別别未非莫]/.test(pre)) { v *= -0.6; a *= 0.7; }
+          if (/[很太極极超最真]|非常/.test(pre)) w *= 1.4;
+          hits.push({ term: e.t, v, a, w, g: e.g });
+        }
+        idx = norm.indexOf(e.t, idx + 1);
+      }
+    }
+    const words = text.toLowerCase().match(/[a-z’']+/g) || [];
+    words.forEach((w0, i) => {
+      const w = w0.replace(/[’']s$/, '').replace(/[’']/g, '');
+      const e = enLookup(w);
+      if (!e) return;
+      let v = e.v, a = e.a, wt = 1;
+      const prev = words.slice(Math.max(0, i - 2), i).join(' ');
+      if (/\b(not|no|never|without)\b|n[’']t/.test(prev)) { v *= -0.6; a *= 0.7; }
+      if (/\b(very|so|really|too|extremely)\b/.test(prev)) wt *= 1.4;
+      hits.push({ term: w0, v, a, w: wt, g: e.g });
+    });
+    for (const [em, v, a, g] of EMOJI) {
+      const n = text.split(em).length - 1;
+      for (let i = 0; i < n; i++) hits.push({ term: em, v, a, w: 1, g: g ? [g] : [] });
+    }
+    let sw = 0, sv = 0, sa = 0;
+    const tags = {};
+    for (const h of hits) {
+      sw += h.w; sv += h.v * h.w; sa += h.a * h.w;
+      for (const t of h.g) tags[t] = (tags[t] || 0) + h.w;
+    }
+    let V = sw ? sv / sw : 0.05, A = sw ? sa / sw : -0.05;
+    const conf = 1 - Math.exp(-sw / 1.5);
+    V *= 0.45 + 0.55 * conf; A *= 0.45 + 0.55 * conf;
+    const ex = (text.match(/[!！]/g) || []).length;
+    const qs = (text.match(/[?？]/g) || []).length;
+    const el = (text.match(/…|\.\.\.|⋯/g) || []).length;
+    A += 0.07 * Math.min(ex, 5) - 0.08 * Math.min(el, 3);
+    if (qs) tags.question = qs;
+    const clauses = text.split(/[，。！？、；,.!?;\n]+/).map(s => s.trim()).filter(Boolean);
+    if (clauses.length) {
+      const avg = clauses.reduce((s, c) => s + Array.from(c).length, 0) / clauses.length;
+      if (avg < 5) A += 0.08;
+      if (avg > 20) A -= 0.06;
+    }
+    V = clamp(V, -1, 1); A = clamp(A, -1, 1);
+    const seen = new Set();
+    const top = hits.filter(h => !seen.has(h.term) && seen.add(h.term))
+      .sort((x, y) => (Math.abs(y.v) + Math.abs(y.a)) * y.w - (Math.abs(x.v) + Math.abs(x.a)) * x.w);
+    return { V, A, tags, top, hits: hits.length };
+  }
+
+  /* ---------- harmony helpers ---------- */
+  function buildChord(modeKey, deg, seventh, raise) {
+    const s = MODES[modeKey].scale;
+    const at = k => s[k % 7] + 12 * Math.floor(k / 7);
+    let tones = [at(deg), at(deg + 2), at(deg + 4)];
+    if (seventh) tones.push(at(deg + 6));
+    if (raise) tones = tones.map(t => (t % 12 === 10 ? t + 1 : t));
+    return { deg, tones, pcs: tones.map(t => t % 12), raise: raise ? 10 : null };
+  }
+  function chordLabel(ch, P) {
+    const root = ch.tones[0], iv = ch.tones.map(t => t - root);
+    const q = iv[1] === 4 ? (iv[2] === 8 ? 'aug' : 'maj') : (iv[2] === 6 ? 'dim' : 'min');
+    const sev = iv[3];
+    let suf = { maj: '', min: 'm', dim: '°', aug: '+' }[q];
+    if (sev !== undefined) {
+      if (q === 'maj') suf = sev === 11 ? 'maj7' : '7';
+      else if (q === 'min') suf = sev === 11 ? 'm(maj7)' : 'm7';
+      else if (q === 'dim') suf = sev === 10 ? 'm7♭5' : '°7';
+      else suf = '+7';
+    }
+    const R = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII'][ch.deg];
+    const diff = root - IONIAN[ch.deg];
+    let rn = (q === 'min' || q === 'dim') ? R.toLowerCase() : R;
+    if (q === 'dim') rn += sev === 10 ? 'ø' : '°';
+    if (q === 'aug') rn += '+';
+    if (sev !== undefined) rn += (q === 'maj' && sev === 11) ? 'maj7' : '7';
+    return { name: noteName(P.keyRoot + root, P.flats) + suf, roman: (diff < 0 ? '♭' : diff > 0 ? '♯' : '') + rn };
+  }
+  function voiceChords(chords, keyRoot) {
+    let prev = null;
+    return chords.map(ch => {
+      const pcs = ch.pcs.map(t => (keyRoot + t) % 12);
+      const n = pcs.length;
+      let best = null, bestCost = 1e9;
+      for (let inv = 0; inv < n; inv++) {
+        const rot = pcs.slice(inv).concat(pcs.slice(0, inv));
+        for (let base = 50; base <= 61; base++) {
+          if (base % 12 !== rot[0]) continue;
+          const v = [base];
+          for (let k = 1; k < n; k++) { let m = v[k - 1] + 1; while (m % 12 !== rot[k]) m++; v.push(m); }
+          if (v[n - 1] > 76) continue;
+          const cost = prev
+            ? v.reduce((s, m) => s + Math.min(...prev.map(p => Math.abs(p - m))), 0) + Math.abs(v[0] - 55) * 0.15
+            : Math.abs(v.reduce((a, b) => a + b, 0) / n - 60) * 2;
+          if (cost < bestCost) { bestCost = cost; best = v; }
+        }
+      }
+      prev = best;
+      return best;
+    });
+  }
+
+  /* ---------- melody helpers ---------- */
+  function relOf(deg, chord, P) {
+    const sc = P.melScale, n = sc.length;
+    let rel = sc[((deg % n) + n) % n] + 12 * Math.floor(deg / n);
+    if (chord && chord.raise != null && rel % 12 === chord.raise) rel += 1;
+    return rel;
+  }
+  const isChordTone = (deg, chord, P) => chord.pcs.includes(relOf(deg, chord, P) % 12);
+  function nearestChordDeg(deg, chord, P, radius = 3) {
+    for (let r = 0; r <= radius; r++) {
+      for (const d of (r ? [deg - r, deg + r] : [deg])) {
+        if (d >= 0 && d <= MAXDEG && isChordTone(d, chord, P)) return d;
+      }
+    }
+    return clamp(deg, 0, MAXDEG);
+  }
+  function reflect(d) {
+    while (d < 0 || d > MAXDEG) { if (d < 0) d = -d; if (d > MAXDEG) d = 2 * MAXDEG - d; }
+    return d;
+  }
+  function makeRhythm(rng, density) {
+    const on = [];
+    for (let s = 0; s < 8; s++) {
+      const p = s === 0 ? 0.9 : s === 4 ? 0.7 : s % 2 === 0 ? density : density * 0.55;
+      if (rng() < p) on.push(s);
+    }
+    if (!on.includes(0)) on.unshift(0);
+    if (on.length < 2) on.push(4);
+    return on.map((s, i) => {
+      const nxt = i + 1 < on.length ? on[i + 1] : 8;
+      let len = nxt - s;
+      if (len >= 3 && rng() < 0.35) len -= 1;
+      return { s, len };
+    });
+  }
+  function pitchBar(rng, rhythm, chord, prevDeg, center, P) {
+    let d = prevDeg;
+    const out = [];
+    for (const n of rhythm) {
+      if (n.s % 4 === 0) {
+        let best = null, bs = 1e9;
+        for (let c = Math.max(0, d - 4); c <= Math.min(MAXDEG, d + 4); c++) {
+          if (!isChordTone(c, chord, P)) continue;
+          const sc = Math.abs(c - d) * 0.9 + 0.35 * Math.abs(c - center) + rng() * 1.3 + (c === d ? 0.6 : 0);
+          if (sc < bs) { bs = sc; best = c; }
+        }
+        if (best !== null) d = best;
+      } else {
+        const r = rng();
+        const step = r < 0.5 ? 1 : r < 0.75 ? 2 : r < 0.87 ? 0 : 3;
+        let dir = rng() < 0.5 ? -1 : 1;
+        if (d > center + 2 && rng() < 0.75) dir = -1;
+        if (d < center - 2 && rng() < 0.75) dir = 1;
+        d = clamp(d + dir * step, 0, MAXDEG);
+      }
+      out.push({ s: n.s, len: n.len, deg: d, vel: n.s % 4 === 0 ? 0.86 : 0.7 });
+    }
+    return out;
+  }
+  function transformBar(bar, chord, P) {
+    const target = nearestChordDeg(bar[0].deg, chord, P);
+    const shift = target - bar[0].deg;
+    return bar.map(n => {
+      let d = clamp(n.deg + shift, 0, MAXDEG);
+      if (n.s % 4 === 0) d = nearestChordDeg(d, chord, P);
+      return { s: n.s, len: n.len, deg: d, vel: n.vel };
+    });
+  }
+  function melodySemantic(P, chords) {
+    const rng = P.rng, mel = new Array(32).fill(null);
+    const R1 = makeRhythm(rng, P.density), R2 = makeRhythm(rng, Math.min(0.8, P.density + 0.1));
+    const last = b => b[b.length - 1].deg;
+    const A1 = pitchBar(rng, R1, chords[0], P.center, P.center, P);
+    const A2 = rng() < 0.7 ? transformBar(A1, chords[1], P) : pitchBar(rng, R1, chords[1], last(A1), P.center, P);
+    const B = pitchBar(rng, R2, chords[2], last(A2), P.center + (rng() < 0.5 ? 1 : 0), P);
+    const A3 = transformBar(A1, chords[3], P);
+    [A1, A2, B, A3].forEach((bar, b) => bar.forEach(n => { mel[b * 8 + n.s] = { deg: n.deg, len: n.len, vel: n.vel }; }));
+    return mel;
+  }
+  function melodyGlyph(P, chords, text) {
+    const mel = new Array(32).fill(null);
+    const chars = Array.from(text.replace(/\s+/g, ' ').trim());
+    if (!chars.length) return mel;
+    const rng = P.rng;
+    let pos = 0, i = (P.variation * 5) % chars.length, guard = 0, deg = P.center;
+    while (pos < 32 && guard++ < 800) {
+      const c = chars[i % chars.length]; i++;
+      if (c === ' ' || SOFT_P.test(c)) { pos += 1; continue; }
+      if (HARD_P.test(c)) { pos += 2; continue; }
+      if (SKIP_P.test(c)) continue;
+      const code = c.codePointAt(0);
+      let len = [1, 1, 2, 1, 2, 3, 1, 2][(code >>> 1) % 8];
+      let move = ((code * 7 + i) % 5) - 2;
+      if (code % 11 === 0) move = move >= 0 ? 4 : -3;
+      if (P.variation && rng() < 0.25) move += rng() < 0.5 ? -1 : 1;
+      deg = reflect(deg + move);
+      const ch = chords[pos >> 3];
+      if (pos % 4 === 0) deg = nearestChordDeg(deg, ch, P);
+      len = Math.max(1, Math.min(len, 8 - (pos % 8)));
+      mel[pos] = { deg, len, vel: 0.66 + ((code >>> 3) % 4) * 0.07, ch: c };
+      pos += len;
+    }
+    return mel;
+  }
+  function normalizeMel(mel) {
+    for (let s = 0; s < 32; s++) {
+      if (!mel[s]) continue;
+      let n = s + 1;
+      while (n < 32 && !mel[n]) n++;
+      const barEnd = ((s >> 3) + 1) * 8;
+      mel[s].len = clamp(mel[s].len, 1, Math.min(n - s, barEnd - s));
+    }
+  }
+  function cadence(mel, chords, P) {
+    let last = -1;
+    for (let s = 31; s >= 0; s--) if (mel[s]) { last = s; break; }
+    if (last < 24) { mel[24] = { deg: P.center, len: 6, vel: 0.75 }; last = 24; }
+    const ch = chords[3], n = mel[last];
+    let best = n.deg, bs = 1e9;
+    for (let d = 0; d <= MAXDEG; d++) {
+      if (!isChordTone(d, ch, P)) continue;
+      const pc = relOf(d, ch, P) % 12;
+      const sc = Math.abs(d - n.deg) - (pc === 0 ? 1.5 : 0) - (pc === ch.pcs[0] ? 0.5 : 0);
+      if (sc < bs) { bs = sc; best = d; }
+    }
+    n.deg = best;
+    n.len = Math.min(Math.max(n.len, 3), 32 - last);
+  }
+
+  /* ---------- bass & drums ---------- */
+  const BASS_PATTERNS = [
+    [[0, 8, 'R']],
+    [[0, 6, 'R'], [6, 2, 'F']],
+    [[0, 3, 'R'], [3, 1, 'R'], [4, 3, 'F'], [7, 1, 'A']],
+    [[0, 2, 'R'], [2, 2, 'R'], [4, 2, 'F'], [6, 1, 'R'], [7, 1, 'A']],
+    [[0, 1, 'R'], [1, 1, 'R'], [2, 1, 'O'], [3, 1, 'R'], [4, 1, 'R'], [5, 1, 'R'], [6, 1, 'O'], [7, 1, 'A']],
+    [[0, 3, 'R'], [3, 3, 'R'], [6, 2, 'F']],
+  ];
+  function foldBass(m) { while (m > 46) m -= 12; while (m < 34) m += 12; return m; }
+  function scaleNeighbor(m, dir, P) {
+    const sc = MODES[P.mode].scale;
+    let x = m + dir;
+    for (let k = 0; k < 3; k++, x += dir) if (sc.includes(((x - P.keyRoot) % 12 + 12) % 12)) return x;
+    return m + dir;
+  }
+  function makeBass(P, chords) {
+    const bass = new Array(32).fill(null), pat = BASS_PATTERNS[P.bassPat];
+    chords.forEach((ch, b) => {
+      const root = foldBass(P.bassBase + ch.pcs[0]);
+      const fifth = root + (ch.tones[2] - ch.tones[0]);
+      const nroot = foldBass(P.bassBase + chords[(b + 1) % 4].pcs[0]);
+      for (const [s, len, kind] of pat) {
+        let m = root;
+        if (kind === 'F') m = fifth;
+        else if (kind === 'O') m = root + 12;
+        else if (kind === 'A') m = nroot === root ? fifth : scaleNeighbor(nroot, nroot > root ? -1 : 1, P);
+        bass[b * 8 + s] = { midi: m, len, vel: s === 0 ? 0.95 : 0.78 };
+      }
+    });
+    return bass;
+  }
+  const DRUM_STYLES = {
+    ambient:  { k: [1, 0, 0, 0, 0, 0, 0, 0], s: [0, 0, 0, 0, .45, 0, 0, 0], h: [.45, 0, .3, 0, .45, 0, .3, 0] },
+    halftime: { k: [1, 0, 0, 0, 0, 0, .55, 0], s: [0, 0, 0, 0, 1, 0, 0, 0], h: [.6, .3, .55, .3, .6, .3, .55, .3] },
+    pop:      { k: [1, 0, 0, .6, 1, 0, 0, 0], s: [0, 0, 1, 0, 0, 0, 1, 0], h: [.7, .4, .65, .4, .7, .4, .65, .4] },
+    drive:    { k: [1, 0, 1, 0, 1, 0, 1, 0], s: [0, 0, 1, 0, 0, 0, 1, 0], h: [.35, .85, .35, .85, .35, .85, .35, .85] },
+    tension:  { k: [1, 0, 0, 1, 0, 0, 1, 0], s: [0, 0, 1, 0, 0, 0, 1, .35], h: [.6, .35, .6, .35, .6, .35, .6, .35] },
+  };
+  function drumsSemantic(P) {
+    const st = DRUM_STYLES[P.drumStyle], rng = P.rng, amb = P.drumStyle === 'ambient';
+    const k = [], s = [], h = [];
+    for (let b = 0; b < 4; b++) for (let i = 0; i < 8; i++) {
+      let kv = st.k[i], sv = st.s[i];
+      if (!kv && i % 2 === 1 && !amb && rng() < 0.08) kv = 0.5;
+      if (!sv && !amb && rng() < 0.06) sv = 0.25;
+      if (b === 3 && !amb) { if (i === 7) sv = Math.max(sv, 0.6); if (i === 5 && rng() < 0.6) sv = Math.max(sv, 0.45); }
+      k.push(kv); s.push(sv); h.push(st.h[i] ? st.h[i] * (0.9 + rng() * 0.2) : 0);
+    }
+    return { k, s, h };
+  }
+  const euclid = (hits, n, rot) => Array.from({ length: n }, (_, i) => (((i + rot) * hits) % n < hits ? 1 : 0));
+  function drumsGlyph(P) {
+    const rng = P.rng, kb = euclid(P.kHits, 8, 0), hb = euclid(P.hHits, 8, P.hRot);
+    const k = [], s = [], h = [];
+    for (let b = 0; b < 4; b++) for (let i = 0; i < 8; i++) {
+      k.push(kb[i] ? (i === 0 ? 1 : 0.72) : 0);
+      let sv = (i === 2 || i === 6) ? 0.95 : 0;
+      if (!sv && rng() < 0.07) sv = 0.25;
+      if (b === 3 && i === 7) sv = 0.6;
+      s.push(sv);
+      h.push(hb[i] ? (i % 2 ? 0.45 : 0.7) * (0.9 + rng() * 0.2) : 0);
+    }
+    return { k, s, h };
+  }
+
+  /* ---------- parameters from seeds ---------- */
+  function finishParams(P) {
+    const M = MODES[P.mode];
+    P.melScale = P.pent ? (M.minor ? PENT_MIN : PENT_MAJ) : M.scale;
+    const lo = P.pent ? 52 : 55;
+    P.melBase = lo + ((P.keyRoot - (lo % 12) + 12) % 12);
+    P.bassBase = 36 + P.keyRoot;
+    P.flats = [5, 10, 3, 8, 1].includes((P.keyRoot - M.off + 12) % 12);
+    return P;
+  }
+  function paramsSemantic(sem, gly, variation) {
+    const { V, A, tags } = sem;
+    const t = k => tags[k] || 0;
+    const dreamy = t('dream') + 0.5 * t('question') >= 0.9 && !t('storm');
+    let mode;
+    if (V >= 0.45) mode = dreamy ? 'lydian' : 'ionian';
+    else if (V >= 0.15) mode = dreamy ? 'lydian' : (A >= 0.3 ? 'mixolydian' : 'ionian');
+    else if (V > -0.15) mode = dreamy ? 'lydian' : 'dorian';
+    else if (V > -0.45) mode = 'aeolian';
+    else mode = A >= 0.3 ? 'phrygian' : 'aeolian';
+    const eastern = t('nature') + t('water') + t('nostalgia') + t('night') + t('sacred') + t('cold');
+    const pent = gly.cjkRatio >= 0.5 && eastern >= 1 && !t('storm') && !t('dance') && mode !== 'phrygian';
+    const words = sem.top.slice(0, 5).map(h => h.term).sort().join('|');
+    const extra = sem.hits ? '' : 'L' + Math.min(9, Math.floor(gly.count / 8)) + (gly.h1 % 3);
+    const [k1, k2] = hashPair(mode + '|' + words + '|' + extra + '|' + Math.round(V * 4) + '|' + Math.round(A * 4));
+    const rng = rngFrom(k2 ^ Math.imul(variation + 1, 0x9E3779B1));
+    const keyRoot = k1 % 12;
+    const bpm = clamp(Math.round(92 + A * 40 + (rng() - 0.5) * 8), 62, 150);
+    const progIdx = Math.floor(rng() * PROGS[mode].length);
+    const prog = PROGS[mode][progIdx];
+    const sevenths = !t('storm') && (dreamy || t('night') > 0 || t('warm') > 0.9 || (Math.abs(V) < 0.35 && A < 0.1));
+    const density = clamp(0.28 + 0.4 * (A + 1) / 2 + (rng() - 0.5) * 0.08, 0.22, 0.72);
+    let bassPat, drumStyle, compPat;
+    if (A < -0.45) { bassPat = pick(rng, [0, 1]); drumStyle = 'ambient'; compPat = 0; }
+    else if (A < -0.05) { bassPat = pick(rng, [1, 5]); drumStyle = 'halftime'; compPat = pick(rng, [0, 1]); }
+    else if (A < 0.45) { bassPat = pick(rng, [2, 3, 5]); drumStyle = 'pop'; compPat = pick(rng, [1, 2]); }
+    else { bassPat = pick(rng, [3, 4]); drumStyle = 'drive'; compPat = pick(rng, [2, 3]); }
+    if (mode === 'phrygian' && A > 0.2) { drumStyle = 'tension'; bassPat = 5; }
+    const center = clamp(Math.round(4.5 + V * 2.2), 2, 7);
+    return ({ source: 'semantic', progIdx, mode, pent, keyRoot, bpm, prog, sevenths, density, bassPat, drumStyle, compPat,
+      center, roll: A < 0.15, raiseV: true, rng, V, A, tags, variation, dreamy });
+  }
+  function paramsGlyph(gly, sem, variation) {
+    const { h1, h2 } = gly;
+    const r = (h1 >>> 4) % 100;
+    const mode = r < 30 ? 'ionian' : r < 55 ? 'aeolian' : r < 70 ? 'dorian' : r < 82 ? 'mixolydian' : r < 92 ? 'lydian' : 'phrygian';
+    const progs = PROGS[mode];
+    return ({
+      source: 'glyph', mode, keyRoot: h1 % 12, progIdx: (h2 >>> 8) % progs.length,
+      pent: gly.cjkRatio >= 0.5 && ((h1 >>> 9) & 1) === 1 && mode !== 'phrygian',
+      prog: progs[(h2 >>> 8) % progs.length],
+      rng: rngFrom(h2 ^ Math.imul(variation + 1, 0x9E3779B1)),
+      bpm: 72 + (h2 % 60),
+      sevenths: ((h1 >>> 13) & 3) === 0,
+      bassPat: ((h2 >>> 3) + variation) % 6,
+      compPat: (h1 >>> 17) % 4,
+      center: 3 + ((h2 >>> 21) % 4),
+      roll: ((h1 >>> 23) & 1) === 1,
+      raiseV: ((h2 >>> 14) & 1) === 1,
+      kHits: 2 + ((h1 >>> 25) % 2), hHits: 4 + ((h2 >>> 26) % 5), hRot: (h2 >>> 29) & 1,
+      variation, density: 0.5, V: sem.V, A: sem.A, tags: sem.tags, h1, h2,
+    });
+  }
+
+  function compose(P, text, sem) {
+    const chords = P.prog.map((d, b) => {
+      const nextDeg = P.prog[(b + 1) % 4];
+      const raise = P.raiseV && (P.mode === 'aeolian' || P.mode === 'dorian') && d === 4 && (b === 3 || nextDeg === 0);
+      return buildChord(P.mode, d, P.sevenths, raise);
+    });
+    let mel = P.source === 'glyph' ? melodyGlyph(P, chords, text) : melodySemantic(P, chords);
+    if (!mel.some(Boolean)) mel = melodySemantic(P, chords);
+    normalizeMel(mel);
+    cadence(mel, chords, P);
+    normalizeMel(mel);
+    assignLyrics(mel, text, sem);
+    return {
+      P, chords, labels: chords.map(c => chordLabel(c, P)), voicings: voiceChords(chords, P.keyRoot),
+      mel, bass: makeBass(P, chords), drums: P.source === 'glyph' ? drumsGlyph(P) : drumsSemantic(P), comp: COMP[P.compPat],
+    };
+  }
+  function make(text, seedMode, variation, ov) {
+    const gly = analyzeGlyph(text);
+    const sem = analyzeSemantic(text);
+    const P = seedMode === 'glyph' ? paramsGlyph(gly, sem, variation) : paramsSemantic(sem, gly, variation);
+    P.auto = { key: P.keyRoot, mode: P.mode, pent: P.pent };
+    if (ov) {
+      if (ov.mode && MODES[ov.mode] && ov.mode !== P.mode) { P.mode = ov.mode; const L = PROGS[P.mode]; P.prog = L[P.progIdx % L.length]; }
+      if (ov.key !== null && ov.key !== undefined && ov.key !== '') P.keyRoot = ((+ov.key % 12) + 12) % 12;
+      if (ov.scale === 'pent') P.pent = true; else if (ov.scale === 'hepta') P.pent = false;
+    }
+    finishParams(P);
+    return { gly, sem, song: compose(P, text, sem) };
+  }
+  const UNIT_RE = /[\u3400-\u9fff\uf900-\ufaff]|[A-Za-z0-9’']+/g;
+  function assignLyrics(mel, text, sem) {
+    const units = text.match(UNIT_RE) || [];
+    const kz = new Set(), ke = new Set();
+    sem.top.forEach(h => { if (CJK_RE.test(h.term)) Array.from(h.term).forEach(c => kz.add(c)); else ke.add(h.term.toLowerCase()); });
+    const norm = c => s2t.get(c) || c;
+    let k = 0;
+    for (let s = 0; s < 32; s++) {
+      const n = mel[s];
+      if (!n) continue;
+      if (!n.ch) n.ch = units.length ? units[k++ % units.length] : '·';
+      n.kw = kz.has(norm(n.ch)) || ke.has(n.ch.toLowerCase());
+    }
+  }
+  function glyphTrace(text, max) {
+    const chars = Array.from(text.replace(/\s+/g, ' ').trim()), out = [];
+    for (let i = 0; i < chars.length && out.length < max; i++) {
+      const c = chars[i];
+      if (c === ' ') { out.push({ c: '␣', kind: 'rest', len: 1 }); continue; }
+      if (SOFT_P.test(c)) { out.push({ c, kind: 'rest', len: 1 }); continue; }
+      if (HARD_P.test(c)) { out.push({ c, kind: 'rest', len: 2 }); continue; }
+      if (SKIP_P.test(c)) { out.push({ c, kind: 'skip' }); continue; }
+      const code = c.codePointAt(0), leap = code % 11 === 0;
+      let move = ((code * 7 + i + 1) % 5) - 2;
+      if (leap) move = move >= 0 ? 4 : -3;
+      out.push({ c, code, kind: 'note', move, leap, len: [1, 1, 2, 1, 2, 3, 1, 2][(code >>> 1) % 8] });
+    }
+    return out;
+  }
+
+  /* ---------- sample synthesis (fills Float32Array) ---------- */
+  function addPartials(d, SR, parts) {
+    const len = d.length;
+    for (const p of parts) {
+      if (p.f >= SR * 0.45 || p.a <= 0) continue;
+      const w = 2 * Math.PI * p.f / SR, cw = Math.cos(w), sw = Math.sin(w);
+      const ph = p.ph || 0;
+      let s = Math.sin(ph), c = Math.cos(ph);
+      const mix = p.mix || 0;
+      const k1 = Math.exp(-1 / (p.tau * SR)), k2 = p.tau2 ? Math.exp(-1 / (p.tau2 * SR)) : 1;
+      let e1 = p.a * (1 - mix), e2 = p.a * mix;
+      const stop = Math.min(len, Math.ceil(Math.max(p.tau, p.tau2 || 0) * SR * 9));
+      for (let i = 0; i < stop; i++) {
+        d[i] += s * (e1 + e2);
+        const ns = s * cw + c * sw; c = c * cw - s * sw; s = ns;
+        e1 *= k1; e2 *= k2;
+      }
+    }
+  }
+  function attackRamp(d, SR, sec) { const n = Math.min(d.length, Math.max(1, Math.floor(sec * SR))); for (let i = 0; i < n; i++) d[i] *= i / n; }
+  function fadeOut(d, SR, sec) { const n = Math.min(d.length, Math.floor(sec * SR)); for (let i = 0; i < n; i++) d[d.length - 1 - i] *= i / n; }
+  function normalize(d, peak = 0.9) {
+    let m = 0;
+    for (let i = 0; i < d.length; i++) { const a = Math.abs(d[i]); if (a > m) m = a; }
+    if (m > 0) { const g = peak / m; for (let i = 0; i < d.length; i++) d[i] *= g; }
+  }
+  function lpf(fc, SR) { const a = 1 - Math.exp(-2 * Math.PI * fc / SR); let y = 0; return x => (y += a * (x - y)); }
+  function hpf(fc, SR) { const l = lpf(fc, SR); return x => x - l(x); }
+  const noise = () => Math.random() * 2 - 1;
+
+  function ks(d, f, SR, bright, t60, pickPos) {
+    const N = Math.max(2, Math.round(SR / f - 0.5));
+    const actual = SR / (N + 0.5);
+    const buf = new Float32Array(N);
+    const l = lpf(Math.min(SR * 0.45, f * bright), SR);
+    for (let i = 0; i < N; i++) buf[i] = l(noise());
+    if (pickPos) {
+      const off = Math.max(1, Math.floor(N * pickPos)), tmp = Float32Array.from(buf);
+      for (let i = 0; i < N; i++) buf[i] = tmp[i] - 0.7 * tmp[(i + off) % N];
+    }
+    let m = 0;
+    for (let i = 0; i < N; i++) m += buf[i];
+    m /= N;
+    for (let i = 0; i < N; i++) buf[i] -= m;
+    const rho = Math.pow(0.001, 1 / (actual * t60));
+    let idx = 0;
+    for (let i = 0; i < d.length; i++) {
+      const nxt = idx + 1 === N ? 0 : idx + 1;
+      const y = buf[idx];
+      d[i] = y;
+      buf[idx] = rho * 0.5 * (y + buf[nxt]);
+      idx = nxt;
+    }
+    return actual;
+  }
+
+  const SYNTH = {
+    piano: {
+      dur: f => clamp(3.6 - Math.log2(f / 65) * 0.45, 1.5, 3.6),
+      render(d, f, SR) {
+        const parts = [], B = 0.00045;
+        const nP = Math.min(16, Math.floor(SR * 0.42 / f));
+        const base = clamp(2.6 * Math.pow(261.6 / f, 0.5), 0.5, 5);
+        for (let n = 1; n <= nP; n++) {
+          const fn = n * f * Math.sqrt(1 + B * n * n);
+          const a = Math.pow(n, -1.15) * (0.55 + 0.45 * Math.abs(Math.sin(n * Math.PI / 7.5)));
+          const tau = base / (1 + 0.55 * (n - 1));
+          for (const det of [-0.00045, 0.00045]) parts.push({ f: fn * (1 + det), a: a * 0.5, tau: tau * 0.28, tau2: tau, mix: 0.4, ph: Math.random() * 6.283 });
+        }
+        addPartials(d, SR, parts);
+        const ln = lpf(2200, SR), nl = Math.floor(0.03 * SR);
+        for (let i = 0; i < nl; i++) d[i] += ln(noise()) * 0.35 * Math.exp(-i / (0.006 * SR));
+        attackRamp(d, SR, 0.0025); fadeOut(d, SR, 0.08); normalize(d);
+        return f;
+      },
+    },
+    epiano: {
+      dur: f => clamp(3 - Math.log2(f / 65) * 0.35, 1.4, 3),
+      render(d, f, SR) {
+        const w = 2 * Math.PI * f / SR;
+        const decay = clamp(1.7 * Math.pow(261.6 / f, 0.35), 0.6, 3);
+        const ratio = f * 14 < SR * 0.4 ? 14 : 7;
+        for (let i = 0; i < d.length; i++) {
+          const t = i / SR;
+          const I = 1.5 * Math.exp(-t / 0.3) + 0.35;
+          const car = Math.sin(w * i + I * Math.sin(w * i));
+          const tine = Math.sin(w * i + 2 * Math.exp(-t / 0.025) * Math.sin(ratio * w * i));
+          d[i] = (0.8 * car + 0.35 * tine * Math.exp(-t / 0.35)) * Math.exp(-t / decay);
+        }
+        attackRamp(d, SR, 0.002); fadeOut(d, SR, 0.08); normalize(d);
+        return f;
+      },
+    },
+    marimba: {
+      dur: () => 1.7,
+      render(d, f, SR) {
+        const base = clamp(0.75 * Math.pow(392 / f, 0.55), 0.18, 1.6);
+        addPartials(d, SR, [{ f, a: 1, tau: base }, { f: f * 3.93, a: 0.32, tau: base * 0.22 }, { f: f * 9.2, a: 0.1, tau: base * 0.07 }]);
+        const l = lpf(1800, SR), nl = Math.floor(0.012 * SR);
+        for (let i = 0; i < nl; i++) d[i] += l(noise()) * 0.5 * Math.exp(-i / (0.0025 * SR));
+        attackRamp(d, SR, 0.0015); fadeOut(d, SR, 0.05); normalize(d);
+        return f;
+      },
+    },
+    zheng: {
+      dur: f => clamp(4 * Math.pow(220 / f, 0.35), 1.6, 4.5),
+      render(d, f, SR) {
+        const t60 = clamp(3.4 * Math.pow(220 / f, 0.5), 1, 5);
+        const actual = ks(d, f, SR, 10, t60, 1 / 7);
+        addPartials(d, SR, [{ f: actual, a: 0.12, tau: t60 / 6.9 }]);
+        attackRamp(d, SR, 0.001); fadeOut(d, SR, 0.08); normalize(d);
+        return actual;
+      },
+    },
+    pbass: {
+      dur: () => 2.4,
+      render(d, f, SR) {
+        const actual = ks(d, f, SR, 3.2, 2.4, 0.2);
+        normalize(d, 0.6);
+        addPartials(d, SR, [{ f: actual, a: 0.45, tau: 0.9 }]);
+        attackRamp(d, SR, 0.003); fadeOut(d, SR, 0.1); normalize(d);
+        return actual;
+      },
+    },
+  };
+
+  const DRUMS = {
+    acoustic: {
+      kick: { dur: 0.5, r(d, SR) {
+        let ph = 0; const l = lpf(3000, SR), l2 = lpf(400, SR);
+        for (let i = 0; i < d.length; i++) {
+          const t = i / SR, f = 52 + 75 * Math.exp(-t / 0.032); ph += 2 * Math.PI * f / SR;
+          const n = noise();
+          d[i] = Math.sin(ph) * Math.exp(-t / 0.2) + l(n) * 0.5 * Math.exp(-t / 0.004) + l2(n) * 0.3 * Math.exp(-t / 0.05);
+        } } },
+      snare: { dur: 0.38, r(d, SR) {
+        const h = hpf(1400, SR), l = lpf(7500, SR);
+        for (let i = 0; i < d.length; i++) {
+          const t = i / SR, n = l(h(noise()));
+          d[i] = Math.sin(2 * Math.PI * 185 * t) * 0.55 * Math.exp(-t / 0.055) + Math.sin(2 * Math.PI * 330 * t) * 0.3 * Math.exp(-t / 0.035) + n * 1.1 * Math.exp(-t / 0.11);
+        } } },
+      hat: { dur: 0.16, r(d, SR) {
+        const fr = [205.3, 304.4, 369.6, 522.7, 540, 800].map(x => x * 1.6), h1 = hpf(7000, SR), h2 = hpf(7000, SR);
+        for (let i = 0; i < d.length; i++) {
+          const t = i / SR; let m = 0;
+          for (const f of fr) m += Math.sin(2 * Math.PI * f * t) > 0 ? 1 : -1;
+          d[i] = h2(h1(m * 0.15 + noise() * 0.6)) * Math.exp(-t / 0.028);
+        } } },
+    },
+    electro: {
+      kick: { dur: 0.75, r(d, SR) {
+        let ph = 0;
+        for (let i = 0; i < d.length; i++) {
+          const t = i / SR, f = 46 + 110 * Math.exp(-t / 0.045); ph += 2 * Math.PI * f / SR;
+          d[i] = Math.tanh(1.6 * Math.sin(ph) * Math.exp(-t / 0.38));
+        } } },
+      snare: { dur: 0.4, r(d, SR) {
+        const h = hpf(900, SR), l = lpf(2600, SR);
+        for (let i = 0; i < d.length; i++) {
+          const t = i / SR; let env = 0;
+          for (let k = 0; k < 3; k++) if (t >= k * 0.011) env += Math.exp(-(t - k * 0.011) / 0.007);
+          if (t >= 0.022) env += 0.7 * Math.exp(-(t - 0.022) / 0.13);
+          d[i] = l(h(noise())) * env;
+        } } },
+      hat: { dur: 0.1, r(d, SR) {
+        const h1 = hpf(8000, SR), h2 = hpf(8000, SR);
+        for (let i = 0; i < d.length; i++) d[i] = h2(h1(noise())) * Math.exp(-(i / SR) / 0.022);
+      } },
+    },
+    wood: {
+      kick: { dur: 0.5, r(d, SR) {
+        let ph = 0; const l = lpf(500, SR);
+        for (let i = 0; i < d.length; i++) {
+          const t = i / SR, f = 70 + 35 * Math.exp(-t / 0.04); ph += 2 * Math.PI * f / SR;
+          d[i] = Math.sin(ph) * Math.exp(-t / 0.28) + l(noise()) * 0.4 * Math.exp(-t / 0.06);
+        } } },
+      snare: { dur: 0.25, r(d, SR) {
+        const h = hpf(2000, SR);
+        for (let i = 0; i < d.length; i++) {
+          const t = i / SR;
+          d[i] = Math.sin(2 * Math.PI * 780 * t) * Math.exp(-t / 0.05) + 0.45 * Math.sin(2 * Math.PI * 1550 * t) * Math.exp(-t / 0.022) + h(noise()) * 0.6 * Math.exp(-t / 0.0015);
+        } } },
+      hat: { dur: 0.14, r(d, SR) {
+        const h = hpf(5000, SR), l = lpf(11000, SR);
+        for (let i = 0; i < d.length; i++) {
+          const t = i / SR;
+          d[i] = l(h(noise())) * (1 - Math.exp(-t / 0.007)) * Math.exp(-t / 0.045);
+        } } },
+    },
+  };
+
+  return { make, relOf, isChordTone, noteName, MODES, MAXDEG, SYNTH, DRUMS, normalize, hashPair, rngFrom, glyphTrace, LEX_SIZE: ZH_LEX.length + EN_MAP.size };
+})();
+</script>
+<script>
+(() => {
+'use strict';
+const E = Engine;
+const $ = s => document.querySelector(s);
+const $$ = s => Array.from(document.querySelectorAll(s));
+const clamp = (x, a, b) => Math.max(a, Math.min(b, x));
+const mtof = m => 440 * Math.pow(2, (m - 69) / 12);
+const ROMAN = ['I', 'II', 'III', 'IV'];
+const STORE = 'textloom.v2';
+const REDUCED = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+const SAMPLES = [
+  { label: '靜夜思', text: '床前明月光，疑是地上霜。\n舉頭望明月，低頭思故鄉。' },
+  { label: 'Wordsworth', text: 'I wandered lonely as a cloud\nThat floats on high o’er vales and hills,\nWhen all at once I saw a crowd,\nA host, of golden daffodils;' },
+  { label: '夏日黃昏', text: '雨後的城市在黃昏裡發亮，我們笑著奔跑，心裡全是夏天！' },
+  { label: '風暴之夜', text: '風暴撕裂夜空，憤怒的雷聲一路追趕，沒有人能停下。' },
+  { label: '山寺清晨', text: '清晨的山寺很安靜，一壺茶，一聲鐘，微風穿過竹林。' },
+  { label: 'Karawane（Hugo Ball）', text: 'jolifanto bambla ô falli bambla\ngrossiga m’pfa habla horem\négiga goramen\nhigo bloiko russula huju' },
+];
+const INSTR = {
+  piano:    { name: '鋼琴', group: 's', kind: 'sample', gain: 0.5, release: 0.22 },
+  epiano:   { name: '電鋼琴', group: 's', kind: 'sample', gain: 0.5, release: 0.3 },
+  zheng:    { name: '古箏撥弦', group: 's', kind: 'sample', gain: 0.5, release: 0.4, ring: 1.6 },
+  marimba:  { name: '馬林巴', group: 's', kind: 'sample', gain: 0.55, release: 0.3, ring: 1.0 },
+  pbass:    { name: '撥弦貝斯', group: 's', kind: 'sample', gain: 0.85, release: 0.08 },
+  flute:    { name: '長笛', group: 'v', kind: 'live', fn: 'flute' },
+  strings:  { name: '弦樂墊', group: 'v', kind: 'live', fn: 'strings', sustain: true },
+  organ:    { name: '管風琴', group: 'v', kind: 'live', fn: 'organ', sustain: true },
+  sub:      { name: '次低音', group: 'v', kind: 'live', fn: 'sub' },
+  sine:     { name: '正弦波', group: 'b', kind: 'live', fn: 'basic', type: 'sine' },
+  triangle: { name: '三角波', group: 'b', kind: 'live', fn: 'basic', type: 'triangle' },
+  square:   { name: '方波', group: 'b', kind: 'live', fn: 'basic', type: 'square' },
+  sawtooth: { name: '鋸齒波', group: 'b', kind: 'live', fn: 'basic', type: 'sawtooth' },
+};
+const GROUPS = { s: '模擬採樣', v: '合成樂器', b: '基本波形' };
+const TRACK_OPTS = {
+  melody: ['piano', 'zheng', 'marimba', 'epiano', 'flute', 'sine', 'triangle', 'square', 'sawtooth'],
+  chords: ['strings', 'epiano', 'piano', 'organ', 'zheng', 'triangle', 'sawtooth'],
+  bass: ['pbass', 'sub', 'sine', 'triangle', 'sawtooth'],
+};
+const KITS = { acoustic: '原聲鼓組（採樣）', electro: '電子鼓組', wood: '木質手鼓（採樣）' };
+const KIT_LABELS = { acoustic: ['大鼓', '小鼓', '鈸'], electro: ['大鼓', '拍手', '鈸'], wood: ['堂鼓', '木魚', '沙鈴'] };
+const TRACKS = [
+  { id: 'melody', zh: '旋律', shape: 'sq' }, { id: 'chords', zh: '和聲', shape: 'ci' },
+  { id: 'bass', zh: '低音', shape: 'tr' }, { id: 'drums', zh: '節奏', shape: 'bk' },
+];
+const SEND = { melody: 0.42, chords: 0.55, bass: 0.06, drums: 0.16 };
+const DRUM_GAIN = { kick: 0.95, snare: 0.6, hat: 0.3 };
+const PART = { k: 'kick', s: 'snare', h: 'hat' };
+const SEED_NOTE = {
+  semantic: '找出帶有情緒與意象的詞，決定調式、速度與配器，再把文字一字一字填進旋律。意思相近的句子，會長出相近的音樂。',
+  glyph: '不管意思，只看每個字的編號：它決定這個音往上或往下走、拉多長；標點變成休止。改一個字，旋律就跟著變。',
+};
+const KEYS = ['C', 'C♯／D♭', 'D', 'E♭', 'E', 'F', 'F♯', 'G', 'A♭', 'A', 'B♭', 'B'];
+const MODE_KEYS = ['ionian', 'lydian', 'mixolydian', 'dorian', 'aeolian', 'phrygian'];
+
+const state = {
+  seedMode: 'semantic', variation: 0, auto: true, view: 'loom', fmt: 'post',
+  inst: { melody: 'zheng', chords: 'strings', bass: 'pbass', drums: 'wood' },
+  vol: { melody: 0.8, chords: 0.55, bass: 0.75, drums: 0.65 },
+  mute: { melody: false, chords: false, bass: false, drums: false },
+  ov: { key: '', mode: '', scale: '' },
+  bpm: 90, swing: 0.15, reverb: 0.35, master: 0.85, playing: false,
+};
+let savedText = null;
+try {
+  const s = JSON.parse(localStorage.getItem(STORE) || 'null');
+  if (s) {
+    if (typeof s.text === 'string') savedText = s.text;
+    if (s.seedMode === 'glyph' || s.seedMode === 'semantic') state.seedMode = s.seedMode;
+    if (typeof s.auto === 'boolean') state.auto = s.auto;
+    for (const t of ['melody', 'chords', 'bass']) if (s.inst && TRACK_OPTS[t].includes(s.inst[t])) state.inst[t] = s.inst[t];
+    if (s.inst && KITS[s.inst.drums]) state.inst.drums = s.inst.drums;
+    if (s.vol) for (const t in state.vol) if (typeof s.vol[t] === 'number') state.vol[t] = s.vol[t];
+    for (const k of ['swing', 'reverb', 'master']) if (typeof s[k] === 'number') state[k] = s[k];
+  }
+} catch (e) { /* storage unavailable */ }
+
+const els = {
+  text: $('#text'), stage: $('#stage'), stageBox: $('#stageBox'), pos: $('#pos'), sst: $('#sst'),
+  hplay: $('#hplay'), listen: $('#listen'), matrix: $('#matrix'), mwrap: $('#mwrap'), tracks: $('#tracks'), auto: $('#auto'),
+  dlg: $('#out'), pv: $('#pv'), cap: $('#cap'), ostat: $('#ostat'), toast: $('#toast'),
+};
+function save() {
+  try {
+    localStorage.setItem(STORE, JSON.stringify({ text: els.text.value, seedMode: state.seedMode, auto: state.auto, inst: state.inst,
+      vol: state.vol, swing: state.swing, reverb: state.reverb, master: state.master }));
+  } catch (e) { /* ignore */ }
+}
+let toastT = 0;
+function toast(msg) { els.toast.textContent = msg; els.toast.classList.add('on'); clearTimeout(toastT); toastT = setTimeout(() => els.toast.classList.remove('on'), 2600); }
+const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+
+let song = null, sem = null, gly = null, curText = '';
+
+/* =================== audio =================== */
+let ctx = null, live = null;
+const bufCache = new Map(), zoneCache = new Map(), drumCache = new Map();
+function mkBuf(ac, ch, len, sr) {
+  try { return new AudioBuffer({ numberOfChannels: ch, length: len, sampleRate: sr }); } catch (e) { return ac.createBuffer(ch, len, sr); }
+}
+function noiseBuf(ac) {
+  const sr = ac.sampleRate, key = 'noise:' + sr;
+  if (!bufCache.has(key)) {
+    const b = mkBuf(ac, 1, sr * 2, sr), d = b.getChannelData(0);
+    for (let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1;
+    bufCache.set(key, b);
+  }
+  return bufCache.get(key);
+}
+function impulse(ac) {
+  const sr = ac.sampleRate, key = 'ir:' + sr;
+  if (!bufCache.has(key)) {
+    const sec = 2.6, len = Math.floor(sec * sr), b = mkBuf(ac, 2, len, sr), pre = Math.floor(0.012 * sr);
+    for (let ch = 0; ch < 2; ch++) {
+      const d = b.getChannelData(ch);
+      let y = 0;
+      for (let i = pre; i < len; i++) {
+        const t = i / sr, a = 0.18 + 0.6 * Math.exp(-t * 2.2);
+        y += a * ((Math.random() * 2 - 1) - y);
+        d[i] = y * Math.pow(1 - t / sec, 2) * Math.exp(-t * 1.5);
+      }
+    }
+    bufCache.set(key, b);
+  }
+  return bufCache.get(key);
+}
+function buildRig(ac) {
+  const comp = ac.createDynamicsCompressor();
+  comp.threshold.value = -14; comp.ratio.value = 3; comp.knee.value = 12; comp.attack.value = 0.01; comp.release.value = 0.25;
+  const master = ac.createGain(); master.gain.value = state.master;
+  master.connect(comp); comp.connect(ac.destination);
+  const conv = ac.createConvolver(); conv.buffer = impulse(ac);
+  const revIn = ac.createGain(); revIn.gain.value = state.reverb;
+  const revOut = ac.createGain(); revOut.gain.value = 0.9;
+  revIn.connect(conv); conv.connect(revOut); revOut.connect(master);
+  const bus = {};
+  for (const t of TRACKS) {
+    const g = ac.createGain(); g.gain.value = state.mute[t.id] ? 0 : state.vol[t.id];
+    const s = ac.createGain(); s.gain.value = SEND[t.id];
+    g.connect(master); g.connect(s); s.connect(revIn);
+    bus[t.id] = g;
+  }
+  return {
+    ac, master, revIn, bus, noise: noiseBuf(ac),
+    flute: ac.createPeriodicWave(new Float32Array([0, 0, 0, 0, 0]), new Float32Array([0, 1, 0.28, 0.1, 0.04])),
+    organ: ac.createPeriodicWave(new Float32Array(9), new Float32Array([0, 1, 0.8, 0.5, 0.45, 0, 0.3, 0, 0.25])),
+  };
+}
+function initAudio() {
+  if (ctx) return true;
+  const AC = window.AudioContext || window.webkitAudioContext;
+  if (!AC) { toast('這個瀏覽器不支援 Web Audio'); return false; }
+  try { if (navigator.audioSession) navigator.audioSession.type = 'playback'; } catch (e) { /* ignore */ }
+  ctx = new AC({ latencyHint: 'interactive' });
+  live = buildRig(ctx);
+  const sil = ctx.createBufferSource(); sil.buffer = mkBuf(ctx, 1, 1, ctx.sampleRate); sil.connect(ctx.destination); sil.start(0);
+  return true;
+}
+function setTrackGain(t) { if (live) live.bus[t].gain.setTargetAtTime(state.mute[t] ? 0 : state.vol[t], ctx.currentTime, 0.03); }
+
+function zoneFor(ac, id, midi) {
+  const sr = ac.sampleRate, root = clamp(Math.round(midi / 12) * 12, 24, 96), key = id + ':' + root + ':' + sr;
+  let z = zoneCache.get(key);
+  if (!z) {
+    const syn = E.SYNTH[id], f = mtof(root);
+    const buf = mkBuf(ac, 1, Math.floor(syn.dur(f) * sr), sr);
+    z = { buf, freq: syn.render(buf.getChannelData(0), f, sr) };
+    zoneCache.set(key, z);
+  }
+  return z;
+}
+function drumBuf(ac, kit, part) {
+  const sr = ac.sampleRate, key = kit + ':' + part + ':' + sr;
+  let b = drumCache.get(key);
+  if (!b) {
+    const spec = E.DRUMS[kit][part];
+    b = mkBuf(ac, 1, Math.floor(spec.dur * sr), sr);
+    const d = b.getChannelData(0);
+    spec.r(d, sr); E.normalize(d);
+    drumCache.set(key, b);
+  }
+  return b;
+}
+function melMidi(s, deg) { const P = song.P; return P.melBase + E.relOf(deg, song.chords[s >> 3], P); }
+function prepare(ac) {
+  if (!song) return;
+  const need = (id, midis) => { if (INSTR[id].kind === 'sample') midis.forEach(m => zoneFor(ac, id, m)); };
+  need(state.inst.melody, song.mel.map((n, s) => n && melMidi(s, n.deg)).filter(Boolean));
+  need(state.inst.chords, song.voicings.flat());
+  need(state.inst.bass, song.bass.filter(Boolean).map(b => b.midi));
+  ['kick', 'snare', 'hat'].forEach(p => drumBuf(ac, state.inst.drums, p));
+}
+
+const LIVE = {
+  basic(R, dest, midi, t, dur, vel, inst) {
+    const ac = R.ac, f = mtof(midi), type = inst.type, end = t + Math.max(dur, 0.04);
+    const o = ac.createOscillator(); o.type = type; o.frequency.value = f;
+    const fl = ac.createBiquadFilter(); fl.type = 'lowpass'; fl.Q.value = 0.6;
+    fl.frequency.setValueAtTime(Math.min(f * (type === 'sine' ? 30 : 9), 12000), t);
+    fl.frequency.setTargetAtTime(Math.min(f * 3.5, 8000), t, 0.25);
+    const g = ac.createGain(), lvl = vel * { sine: 0.36, triangle: 0.36, square: 0.13, sawtooth: 0.14 }[type];
+    g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(lvl, t + 0.008);
+    g.gain.setTargetAtTime(lvl * 0.62, t + 0.01, 0.12); g.gain.setTargetAtTime(0, end, 0.05);
+    o.connect(fl); fl.connect(g); g.connect(dest); o.start(t); o.stop(end + 0.4);
+  },
+  flute(R, dest, midi, t, dur, vel) {
+    const ac = R.ac, f = mtof(midi), end = t + Math.max(dur, 0.1), lvl = vel * 0.3;
+    const o = ac.createOscillator(); o.setPeriodicWave(R.flute); o.frequency.value = f;
+    const lfo = ac.createOscillator(); lfo.frequency.value = 4.8 + Math.random() * 0.8;
+    const lg = ac.createGain(); lg.gain.setValueAtTime(0, t); lg.gain.linearRampToValueAtTime(f * 0.006, t + Math.min(0.5, dur));
+    lfo.connect(lg); lg.connect(o.frequency);
+    const g = ac.createGain(); g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(lvl, t + 0.07); g.gain.setTargetAtTime(0, end, 0.06);
+    const n = ac.createBufferSource(); n.buffer = R.noise; n.loop = true;
+    const bp = ac.createBiquadFilter(); bp.type = 'bandpass'; bp.frequency.value = Math.min(f * 2, 9000); bp.Q.value = 0.9;
+    const ng = ac.createGain(); ng.gain.setValueAtTime(0, t); ng.gain.linearRampToValueAtTime(lvl * 0.35, t + 0.03);
+    ng.gain.setTargetAtTime(lvl * 0.07, t + 0.05, 0.08); ng.gain.setTargetAtTime(0, end, 0.05);
+    o.connect(g); g.connect(dest); n.connect(bp); bp.connect(ng); ng.connect(dest);
+    o.start(t); lfo.start(t); n.start(t, Math.random());
+    o.stop(end + 0.5); lfo.stop(end + 0.5); n.stop(end + 0.5);
+  },
+  strings(R, dest, midi, t, dur, vel) {
+    const ac = R.ac, f = mtof(midi), end = t + Math.max(dur, 0.2), lvl = vel * 0.06, atk = Math.min(0.4, dur * 0.5);
+    const fl = ac.createBiquadFilter(); fl.type = 'lowpass'; fl.Q.value = 0.5;
+    fl.frequency.setValueAtTime(Math.min(f * 2.5, 2000), t); fl.frequency.linearRampToValueAtTime(Math.min(f * 5, 4500), t + Math.min(0.8, dur));
+    const g = ac.createGain(); g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(lvl, t + atk); g.gain.setTargetAtTime(0, end, 0.28);
+    fl.connect(g); g.connect(dest);
+    for (const c of [-10, 0, 9]) {
+      const o = ac.createOscillator(); o.type = 'sawtooth'; o.frequency.value = f; o.detune.value = c + Math.random() * 3;
+      o.connect(fl); o.start(t); o.stop(end + 1.8);
+    }
+  },
+  organ(R, dest, midi, t, dur, vel) {
+    const ac = R.ac, f = mtof(midi), end = t + Math.max(dur, 0.05), lvl = vel * 0.075;
+    const o = ac.createOscillator(); o.setPeriodicWave(R.organ); o.frequency.value = f;
+    const g = ac.createGain(); g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(lvl, t + 0.012); g.gain.setTargetAtTime(0, end, 0.03);
+    o.connect(g); g.connect(dest); o.start(t); o.stop(end + 0.3);
+  },
+  sub(R, dest, midi, t, dur, vel) {
+    const ac = R.ac, f = mtof(midi), end = t + Math.max(dur, 0.05), lvl = vel * 0.55;
+    const o = ac.createOscillator(); o.type = 'sine'; o.frequency.value = f;
+    const o2 = ac.createOscillator(); o2.type = 'triangle'; o2.frequency.value = f;
+    const g2 = ac.createGain(); g2.gain.value = 0.35;
+    const fl = ac.createBiquadFilter(); fl.type = 'lowpass'; fl.frequency.value = 900;
+    const g = ac.createGain(); g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(lvl, t + 0.006);
+    g.gain.setTargetAtTime(lvl * 0.8, t + 0.01, 0.2); g.gain.setTargetAtTime(0, end, 0.04);
+    o.connect(g); o2.connect(g2); g2.connect(fl); fl.connect(g); g.connect(dest);
+    o.start(t); o2.start(t); o.stop(end + 0.3); o2.stop(end + 0.3);
+  },
+};
+function playNote(R, tr, id, midi, t, dur, vel) {
+  const inst = INSTR[id], dest = R.bus[tr], ac = R.ac;
+  if (inst.kind !== 'sample') { LIVE[inst.fn](R, dest, midi, t, dur, vel, inst); return; }
+  const z = zoneFor(ac, id, midi);
+  const src = ac.createBufferSource(); src.buffer = z.buf; src.playbackRate.value = mtof(midi) / z.freq;
+  const g = ac.createGain(), end = t + (inst.ring ? Math.max(dur, inst.ring) : Math.max(dur, 0.05));
+  g.gain.setValueAtTime(vel * inst.gain, t); g.gain.setTargetAtTime(0, end, inst.release / 3);
+  src.connect(g); g.connect(dest); src.start(t); src.stop(end + inst.release * 1.5 + 0.05);
+}
+function playDrum(R, part, t, vel) {
+  if (!(vel > 0)) return;
+  const src = R.ac.createBufferSource(); src.buffer = drumBuf(R.ac, state.inst.drums, part);
+  const g = R.ac.createGain(); g.gain.value = vel * DRUM_GAIN[part];
+  src.connect(g); g.connect(R.bus.drums); src.start(t);
+}
+const human = () => 0.94 + Math.random() * 0.12;
+const stepDur = () => 60 / state.bpm / 2;
+function playStep(R, s, t0, sd) {
+  const t = t0 + (s % 2 ? state.swing * sd / 3 : 0), bar = s >> 3, pos = s % 8;
+  const m = song.mel[s];
+  if (m) playNote(R, 'melody', state.inst.melody, melMidi(s, m.deg), t, m.len * sd * (state.inst.melody === 'flute' ? 0.98 : 0.9), m.vel * human());
+  const ci = INSTR[state.inst.chords], hits = ci.sustain ? [0] : song.comp, hi = hits.indexOf(pos);
+  if (hi >= 0) {
+    const nextPos = hi + 1 < hits.length ? hits[hi + 1] : 8, dur = (nextPos - pos) * sd * (ci.sustain ? 1 : 0.92);
+    const roll = song.P.roll && pos === 0 && (state.inst.chords === 'piano' || state.inst.chords === 'zheng');
+    song.voicings[bar].forEach((midi, i) => playNote(R, 'chords', state.inst.chords, midi, t + (roll ? i * 0.024 : 0), dur, (pos === 0 ? 0.6 : 0.48) * human()));
+  }
+  const b = song.bass[s];
+  if (b) playNote(R, 'bass', state.inst.bass, b.midi, t, b.len * sd * 0.9, b.vel);
+  const d = song.drums;
+  playDrum(R, 'kick', t, d.k[s]); playDrum(R, 'snare', t, d.s[s] * human()); playDrum(R, 'hat', t, d.h[s]);
+}
+
+/* live scheduler */
+let timer = null, nextTime = 0, curStep = 0, visStep = null;
+const vq = [];
+function schedule() {
+  if (nextTime < ctx.currentTime - 0.1) nextTime = ctx.currentTime + 0.05;
+  const sd = stepDur();
+  while (nextTime < ctx.currentTime + 0.12) {
+    playStep(live, curStep, nextTime, sd);
+    vq.push({ step: curStep, time: nextTime });
+    nextTime += sd;
+    curStep = (curStep + 1) % 32;
+  }
+}
+const PLAY_ICON = 'M3 1.5v13L14.5 8z', STOP_ICON = 'M2.5 2.5h11v11h-11z';
+function setPlayUI(on) {
+  $$('.pi').forEach(p => p.setAttribute('d', on ? STOP_ICON : PLAY_ICON));
+  els.hplay.setAttribute('aria-pressed', String(on)); els.hplay.setAttribute('aria-label', on ? '停止' : '播放');
+  els.listen.querySelector('.in > span').textContent = on ? '停止' : '聆聽';
+}
+async function start() {
+  if (!initAudio()) return;
+  const r = ctx.state !== 'running' ? ctx.resume() : null;
+  setPlayUI(true);
+  if (r) { try { await r; } catch (e) { /* ignore */ } }
+  await new Promise(res => setTimeout(res, 16));
+  prepare(ctx);
+  curStep = 0; vq.length = 0; nextTime = ctx.currentTime + 0.08;
+  state.playing = true;
+  timer = setInterval(schedule, 25); schedule();
+}
+function stop() {
+  state.playing = false; clearInterval(timer); timer = null; vq.length = 0; visStep = null;
+  stage.step = -1; setPlayUI(false);
+  const ph = $('#ph'); if (ph) ph.hidden = true;
+  $$('.now').forEach(e => e.classList.remove('now'));
+  els.pos.textContent = 'I.1';
+}
+const toggle = () => (state.playing ? stop() : start());
+function audition(fn) { if (!initAudio()) return; if (ctx.state !== 'running') ctx.resume(); fn(); }
+
+/* =================== illustrations (single source for SVG and canvas) =================== */
+function gearPath(cx, cy, ro, ri, n) {
+  const st = Math.PI * 2 / n, P = (r, a) => `${(cx + Math.cos(a) * r).toFixed(1)} ${(cy + Math.sin(a) * r).toFixed(1)}`;
+  let d = '';
+  for (let i = 0; i < n; i++) { const b = i * st; d += (i ? 'L' : 'M') + P(ri, b) + 'L' + P(ro, b + st * 0.14) + 'L' + P(ro, b + st * 0.4) + 'L' + P(ri, b + st * 0.54); }
+  return d + 'Z';
+}
+const ILL = {
+  gramophone: { w: 112, h: 100, s: ['M18 72L62 72L62 90L18 90Z', 'M23 77L57 77L57 85L23 85Z', 'M13 72C13 65 67 65 67 72', 'M57 70L61 56L52 47', 'M52 47C50 44 48 43 45 43',
+    'M44 42C50 34 56 22 63 9', 'M48 46C58 42 76 36 92 29', 'M71 11C66 23 57 34 49 42', 'M82 17C73 28 62 38 51 45', 'M98 8Q104 17 100 27', 'M103 2Q112 17 105 34', 'M26 90L26 95M54 90L54 95'],
+    f: [['M63 9C72 0 100 12 92 29C86 37 58 21 63 9Z', 'red']] },
+  hand: { w: 120, h: 50, s: ['M2 12L18 12L18 42L2 42Z', 'M7 12L7 42', 'M12 12L12 42',
+    'M18 15C26 10 40 10 50 15L101 15C109 15 109 24 101 24L60 24C67 24 68 31 61 31L54 31C61 31 62 38 55 38L50 38C56 38 56 44 49 44L32 44C25 44 21 42 18 40',
+    'M40 15C45 19 52 20 58 19', 'M96 16C100 17 100 22 96 23'], f: [] },
+  eye: { w: 100, h: 52, s: ['M4 27C24 5 76 5 96 27C76 49 24 49 4 27Z', 'M18 15L13 6M32 10L30 2M50 8L50 1M68 10L70 2M82 15L87 6'],
+    f: [['M62 27A12 12 0 1 1 38 27A12 12 0 1 1 62 27Z', 'red'], ['M55 27A5 5 0 1 1 45 27A5 5 0 1 1 55 27Z', 'ink']] },
+  gear: { w: 110, h: 100, s: [gearPath(48, 50, 40, 32, 11), 'M48 50L48 22M48 50L72 62M48 50L24 62', 'M84 76L108 98', 'M84 76A5 5 0 1 1 84 75.9'],
+    f: [['M56 50A8 8 0 1 1 40 50A8 8 0 1 1 56 50Z', 'red']] },
+  scissors: { w: 100, h: 62, s: ['M20 18A9 9 0 1 1 2 18A9 9 0 1 1 20 18Z', 'M20 44A9 9 0 1 1 2 44A9 9 0 1 1 20 44Z',
+    'M19 23C40 30 70 36 97 38L28 31', 'M19 39C40 32 70 26 97 24L28 31', 'M0 58L100 58'], f: [['M33 31A3 3 0 1 1 27 31A3 3 0 1 1 33 31Z', 'red']] },
+  arrow: { w: 100, h: 40, s: ['M4 30C28 8 58 36 92 14', 'M80 9L93 13L86 25'], f: [] },
+};
+function svgIll(name) {
+  const I = ILL[name];
+  return `<svg viewBox="0 0 ${I.w} ${I.h}" aria-hidden="true">` + I.f.map(([d, c]) => `<path d="${d}" class="f-${c}"/>`).join('') +
+    I.s.map(d => `<path d="${d}"${name === 'scissors' && d === 'M0 58L100 58' ? ' class="dash"' : ''}/>`).join('') + '</svg>';
+}
+function drawIll(g, name, x, y, w, rot, P, u) {
+  const I = ILL[name], s = w / I.w;
+  g.save(); g.translate(x, y); g.rotate(rot || 0); g.scale(s, s);
+  g.lineJoin = 'round'; g.lineCap = 'round';
+  for (const [d, c] of I.f) { g.fillStyle = P[c]; g.fill(new Path2D(d)); }
+  g.strokeStyle = P.ink; g.lineWidth = 2.2 * u / s;
+  for (const d of I.s) g.stroke(new Path2D(d));
+  g.restore();
+}
+
+/* =================== stage visuals (collage) =================== */
+const LIGHT = { paper: '#ece5d6', sheet: '#faf6ec', news: '#d5cdbc', ink: '#171513', ink2: '#4e483f', red: '#d23a22', yellow: '#e8c552',
+  dot: 'rgba(23,21,19,.4)', shadow: 'rgba(40,28,16,.22)', white: '#ffffff' };
+let pal = Object.assign({}, LIGHT);
+function readPal() {
+  const cs = getComputedStyle(document.documentElement), v = n => cs.getPropertyValue(n).trim();
+  pal = { paper: v('--paper'), sheet: v('--sheet'), news: v('--news'), ink: v('--ink'), ink2: v('--ink2'), red: v('--red'), yellow: v('--yellow'),
+    dot: v('--dot'), shadow: v('--shade'), white: '#ffffff' };
+}
+const F = {
+  serif: '"Noto Serif TC","Songti TC","PMingLiU",serif',
+  sans: '"Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif',
+  hand: '"LXGW WenKai TC","Kaiti TC","STKaiti","KaiTi",serif',
+  didone: '"Bodoni Moda","Didot","Bodoni 72",serif',
+  grot: '"Archivo Black","Arial Black",sans-serif',
+  type: '"Special Elite","LXGW WenKai TC","Courier New",monospace',
+};
+const FONT_CJK = F.serif, FONT_GEO = F.didone;
+const CJK = /[\u3400-\u9fff\uf900-\ufaff]/;
+const CUT = [
+  { bg: 'sheet', fg: 'ink', cj: `900 {S}px ${F.serif}`, la: `italic 800 {S}px ${F.didone}` },
+  { bg: 'ink', fg: 'sheet', cj: `900 {S}px ${F.sans}`, la: `400 {S}px ${F.grot}` },
+  { bg: 'red', fg: 'white', cj: `900 {S}px ${F.serif}`, la: `italic 800 {S}px ${F.didone}` },
+  { bg: 'news', fg: 'ink', cj: `700 {S}px ${F.hand}`, la: `400 {S}px ${F.type}` },
+  { bg: 'yellow', fg: 'ink', cj: `900 {S}px ${F.sans}`, la: `400 {S}px ${F.grot}` },
+  { bg: 'sheet', fg: 'red', cj: `700 {S}px ${F.hand}`, la: `400 {S}px ${F.type}` },
+];
+function hash2(a, b) {
+  let h = Math.imul((a >>> 0) ^ 0x9e3779b9, 0x85ebca6b) ^ Math.imul((b >>> 0) + 0x632be5ab, 0xc2b2ae35);
+  h ^= h >>> 15; h = Math.imul(h, 0x2c1b3c6d); h ^= h >>> 12; h = Math.imul(h, 0x297a2d39); h ^= h >>> 15;
+  return (h >>> 0) / 4294967296;
+}
+function cutout(g, P, x, y, q, ch, seed, o) {
+  const r = k => hash2(seed, k), u = o.u || 1, st = CUT[Math.floor(r(1) * CUT.length)];
+  const chars = Array.from(ch), n = chars.length, isC = CJK.test(ch);
+  const h = q / 2, wq = h * (n > 1 && !isC ? 1.45 : 1) * (0.92 + r(9) * 0.18), j = q * 0.1;
+  const sc = 1 + 0.32 * (o.pop || 0);
+  g.save(); g.translate(x, y); g.rotate((r(2) - 0.5) * (o.tilt || 0.34)); g.scale(sc, sc);
+  const pts = [[-wq + (r(3) - .5) * j, -h + (r(4) - .5) * j], [wq + (r(5) - .5) * j, -h + (r(6) - .5) * j], [wq + (r(7) - .5) * j, h + (r(8) - .5) * j], [-wq + (r(10) - .5) * j, h + (r(11) - .5) * j]];
+  const poly = (dx, dy) => { g.beginPath(); pts.forEach((p, i) => (i ? g.lineTo(p[0] + dx, p[1] + dy) : g.moveTo(p[0] + dx, p[1] + dy))); g.closePath(); };
+  if (o.shadow !== false) { g.fillStyle = P.shadow; poly(1.8 * u, 2.4 * u); g.fill(); }
+  g.fillStyle = P[st.bg]; poly(0, 0); g.fill();
+  let S = q * (isC ? 0.68 : (n > 1 ? 0.52 : 0.74));
+  const font = (isC ? st.cj : st.la);
+  g.font = font.replace('{S}', S.toFixed(1));
+  const label = n > 9 ? chars.slice(0, 9).join('') : ch, mw = wq * 1.8, w = g.measureText(label).width;
+  if (w > mw) { S = Math.max(q * 0.22, S * mw / w); g.font = font.replace('{S}', S.toFixed(1)); }
+  g.fillStyle = P[st.fg]; g.textAlign = 'center'; g.textBaseline = 'middle';
+  g.fillText(label, 0, q * 0.04);
+  if (o.kw) {
+    g.strokeStyle = P.red; g.lineWidth = 1.5 * u; const kx = wq, ky = -h, kr = q * 0.15;
+    g.beginPath(); for (let a = 0; a < 3; a++) { const an = a * Math.PI / 3 + 0.3; g.moveTo(kx - Math.cos(an) * kr, ky - Math.sin(an) * kr); g.lineTo(kx + Math.cos(an) * kr, ky + Math.sin(an) * kr); } g.stroke();
+  }
+  g.restore();
+  if (o.lit > 0.02) {
+    g.save(); g.globalAlpha = Math.min(1, o.lit * 1.3); g.strokeStyle = P.red; g.lineWidth = 3.2 * u; g.lineCap = 'round';
+    g.beginPath(); g.moveTo(x - wq * 1.05, y + q * 0.66); g.quadraticCurveTo(x, y + q * 0.78, x + wq * 1.05, y + q * 0.62); g.stroke(); g.restore();
+  }
+  if (o.pop > 0.12) {
+    g.save(); g.globalAlpha = o.pop; g.strokeStyle = P.red; g.lineWidth = 1.7 * u; g.lineCap = 'round'; g.beginPath();
+    for (let i = 0; i < 9; i++) { const a = i / 9 * Math.PI * 2 + r(12) * 6, r1 = q * 0.8, r2 = q * (0.98 + 0.3 * (1 - o.pop)); g.moveTo(x + Math.cos(a) * r1, y + Math.sin(a) * r1); g.lineTo(x + Math.cos(a) * r2, y + Math.sin(a) * r2); }
+    g.stroke(); g.restore();
+  }
+}
+const PUNCT_RE = /[\s，。、；：！？,.!?;:「」『』（）《》〈〉()\[\]"'“”‘’…—\-·]/;
+
+class Stage {
+  constructor() { this.u = 1; this.dkey = ''; this.seed = 1; this.reset(); }
+  reset() {
+    this.t = 0; this.step = -1; this.frac = 0; this.pulse = 0; this.ripples = [];
+    this.lit = new Float32Array(32); this.dur = new Float32Array(32).fill(0.5); this.pop = new Float32Array(32);
+    this.bl = new Float32Array(32); this.sn = new Float32Array(32); this.hh = new Float32Array(32); this.kk = new Float32Array(32); this.bar = new Float32Array(4);
+  }
+  setRect(r, seed) {
+    this.rect = r; this.seed = seed >>> 0;
+    const u = this.u, pad = 16 * u, gut = Math.min(Math.max(r.w * 0.16, 62 * u), 160 * u), gap = 10 * u;
+    const rowH = Math.max(8, (r.h - pad * 2 - gap * 3) / 4), left = r.x + gut, right = r.x + r.w - pad, slotW = (right - left) / 8;
+    const rowTop = b => r.y + pad + b * (rowH + gap);
+    this.geo = {
+      pad, gut, gap, rowH, slotW, left, right, rowTop,
+      q: Math.max(12 * u, Math.min(slotW * 0.66, rowH * 0.36)),
+      rowMid: b => rowTop(b) + rowH / 2, rowBot: b => rowTop(b) + rowH,
+      nx: s => left + ((s % 8) + 0.5) * slotW, ny: (b, deg) => rowTop(b) + rowH * (0.8 - (deg / 9) * 0.46),
+      cx: r.x + gut * 0.5, rad: Math.max(3, Math.min(gut * 0.38, rowH * 0.36)),
+    };
+    const sp = 13 * u, key = [r.x, r.y, r.w, r.h, sp, this.seed].join('|');
+    if (key === this.dkey) return;
+    this.dkey = key;
+    const cols = Math.ceil(r.w / sp) + 1, rows = Math.ceil(r.h / (sp * 0.866)) + 1, n = cols * rows;
+    const X = new Float32Array(n), Y = new Float32Array(n), J = new Float32Array(n);
+    let k = 0;
+    for (let j = 0; j < rows; j++) for (let i = 0; i < cols; i++) {
+      X[k] = r.x + i * sp + (j % 2 ? sp / 2 : 0); Y[k] = r.y + j * sp * 0.866; J[k] = (hash2(this.seed, k) - 0.5) * 0.06; k++;
+    }
+    const big = { x: r.x + r.w * (0.35 + hash2(this.seed, 7) * 0.5), y: r.y + r.h * (0.2 + hash2(this.seed, 8) * 0.6), rad: Math.max(r.w, r.h) * 0.42 };
+    this.dots = { sp, n, X, Y, J, big };
+    this.wob = [0, 1, 2].map(b => Array.from({ length: 13 }, (_, i) => (hash2(this.seed, 100 + b * 20 + i) - 0.5) * 2));
+  }
+  ripple(x, y, c, str) {
+    const u = this.u;
+    this.ripples.push({ x, y, c, t0: this.t, str, speed: 210 * u, w: 28 * u * Math.sqrt(str) });
+    if (this.ripples.length > 28) this.ripples.shift();
+  }
+  onStep(sg, s, sd) {
+    const G = this.geo; if (!G || !sg) return;
+    this.step = s; this.frac = 0;
+    const bar = s >> 3, n = sg.mel[s];
+    if (n) { this.lit[s] = 1; this.pop[s] = 1; this.dur[s] = n.len * sd; this.ripple(G.nx(s), G.ny(bar, n.deg), 0, 1); }
+    if (s % 8 === 0) { this.bar[bar] = 1; this.ripple(G.cx, G.rowMid(bar), 1, 1.5); }
+    if (sg.bass[s]) { this.bl[s] = 1; this.ripple(G.nx(s), G.rowBot(bar) - 6, 2, 0.55); }
+    const d = sg.drums;
+    if (d.k[s] > 0) { this.pulse = Math.max(this.pulse, d.k[s]); this.kk[s] = d.k[s]; }
+    if (d.s[s] > 0) this.sn[s] = d.s[s];
+    if (d.h[s] > 0) this.hh[s] = d.h[s];
+  }
+  update(dt) {
+    this.t += dt;
+    const e5 = Math.exp(-dt * 5), e7 = Math.exp(-dt * 6);
+    for (let i = 0; i < 32; i++) {
+      if (this.lit[i] > 0) this.lit[i] = Math.max(0, this.lit[i] - dt / (Math.max(0.25, this.dur[i]) + 0.7));
+      this.pop[i] *= e7; this.bl[i] *= e5; this.sn[i] *= e5; this.hh[i] *= e5; this.kk[i] *= e5;
+    }
+    for (let b = 0; b < 4; b++) this.bar[b] *= Math.exp(-dt * 0.9);
+    this.pulse *= Math.exp(-dt * 8);
+    this.ripples = this.ripples.filter(p => this.t - p.t0 < 2.8);
+  }
+  simulate(sg, sd) {
+    this.reset();
+    for (let s = 0; s < 32; s++) { this.onStep(sg, s, sd); this.update(sd * 0.3); }
+    this.step = -1;
+  }
+  draw(g, sg, o) {
+    const r = this.rect, G = this.geo, u = this.u, P = o.pal, t = this.t, D = this.dots, still = !!o.still;
+    g.save(); g.beginPath(); g.rect(r.x, r.y, r.w, r.h); g.clip();
+    // halftone print, pushed by sound
+    const rip = [];
+    for (const p of this.ripples) { const age = t - p.t0, k = p.str * Math.exp(-age * 1.2) * (REDUCED ? 0.5 : 1); if (k > 0.03) rip.push({ x: p.x, y: p.y, c: p.c, front: p.speed * age, w: p.w, k }); }
+    const maxR = D.sp * 0.56, pk = this.pulse * 0.1, fl = (REDUCED ? 0.3 : 1) * 2.2 * u, B = D.big;
+    const pI = new Path2D(), pR = new Path2D();
+    for (let i = 0; i < D.n; i++) {
+      const x = D.X[i], y = D.Y[i];
+      const bd = Math.hypot(x - B.x, y - B.y) / B.rad;
+      let tone = (bd < 1 ? 0.13 * (1 - bd * bd) : 0) + 0.018 + 0.04 * Math.sin(x * 0.008 / u + t * 0.22) * Math.cos(y * 0.011 / u - t * 0.17) + D.J[i] + pk;
+      let red = 0, dx = fl * Math.sin(y * 0.021 / u + t * 0.9), dy = fl * Math.cos(x * 0.017 / u + t * 0.8);
+      for (const q of rip) {
+        const rx = x - q.x, ry = y - q.y, d = Math.sqrt(rx * rx + ry * ry) + 1e-3, e = (d - q.front) / q.w;
+        if (e > -2.2 && e < 2.2) { const k = q.k * Math.exp(-e * e); tone += k * 0.4; dx += rx / d * k * 5 * u; dy += ry / d * k * 5 * u; if (q.c === 0 && k > red) red = k; }
+      }
+      if (tone <= 0.025) continue;
+      const rad = maxR * Math.sqrt(Math.min(0.95, tone)), path = red > 0.3 ? pR : pI;
+      path.moveTo(x + dx + rad, y + dy); path.arc(x + dx, y + dy, rad, 0, 6.2832);
+    }
+    g.fillStyle = P.dot; g.fill(pI); g.globalAlpha = 0.85; g.fillStyle = P.red; g.fill(pR); g.globalAlpha = 1;
+
+    // hand-ruled staff lines between the four bars
+    g.strokeStyle = P.ink; g.globalAlpha = 0.55; g.lineWidth = 1.1 * u;
+    for (let b = 0; b < 3; b++) {
+      const y = G.rowBot(b) + G.gap / 2, x0 = r.x + G.pad, x1 = G.right, W = this.wob[b];
+      g.beginPath(); for (let k = 0; k <= 12; k++) { const x = x0 + (x1 - x0) * k / 12, yy = y + W[k] * 1.6 * u; k ? g.lineTo(x, yy) : g.moveTo(x, yy); } g.stroke();
+    }
+    g.globalAlpha = 1;
+    const cur = this.step >= 0 ? this.step >> 3 : -1;
+    for (let b = 0; b < 4; b++) {
+      // chord: rubber stamp
+      const lab = sg.labels[b], act = still ? 1 : Math.max(b === cur ? 0.85 : 0, this.bar[b]);
+      const R = G.rad * (1 + 0.12 * (b === cur ? this.bar[b] : 0)), rot = (hash2(this.seed, 50 + b) - 0.5) * 0.5;
+      g.save(); g.translate(G.cx, G.rowMid(b)); g.rotate(rot);
+      g.globalAlpha = 0.9; g.fillStyle = P.sheet; g.beginPath(); g.arc(0, 0, R * 1.04, 0, Math.PI * 2); g.fill();
+      g.globalAlpha = 0.34 + 0.66 * act;
+      if (act > 0.5) { g.fillStyle = P.red; g.globalAlpha = 0.12 * act; g.beginPath(); g.arc(0, 0, R, 0, Math.PI * 2); g.fill(); g.globalAlpha = 0.34 + 0.66 * act; }
+      g.strokeStyle = P.red; g.fillStyle = P.red; g.lineWidth = 2.6 * u;
+      g.setLineDash([R * 0.9, R * 0.07, R * 0.4, R * 0.05]); g.beginPath(); g.arc(0, 0, R, 0, Math.PI * 2); g.stroke(); g.setLineDash([]);
+      g.lineWidth = 1.1 * u; g.beginPath(); g.arc(0, 0, R * 0.8, 0, Math.PI * 2); g.stroke();
+      let fs = R * 0.5; g.font = `700 ${fs}px ${F.didone}`;
+      const w = g.measureText(lab.name).width; if (w > R * 1.35) { fs *= R * 1.35 / w; g.font = `700 ${fs}px ${F.didone}`; }
+      g.textAlign = 'center'; g.textBaseline = 'middle'; g.fillText(lab.name, 0, -R * 0.08);
+      g.font = `400 ${R * 0.24}px ${F.type}`; g.fillText(lab.roman, 0, R * 0.42);
+      g.restore(); g.globalAlpha = 1;
+      // rhythm marks
+      for (let i = 0; i < 8; i++) {
+        const s = b * 8 + i, x = G.nx(s), yt = G.rowTop(b) + 7 * u, d = sg.drums;
+        if (d.h[s] > 0) { g.globalAlpha = still ? 0.4 : 0.16 + this.hh[s] * 0.7; g.fillStyle = P.ink; g.fillRect(x - 0.7 * u, yt - 4 * u, 1.4 * u, 7 * u); }
+        if (d.s[s] > 0) {
+          g.globalAlpha = still ? 0.75 * d.s[s] : 0.12 + this.sn[s] * 0.88; g.strokeStyle = P.ink; g.lineWidth = 1.6 * u; const xs = x + G.slotW * 0.24, k = 3.6 * u;
+          g.beginPath(); g.moveTo(xs - k, yt - k); g.lineTo(xs + k, yt + k); g.moveTo(xs + k, yt - k); g.lineTo(xs - k, yt + k); g.stroke();
+        }
+        if (d.k[s] > 0) { g.globalAlpha = still ? 0.85 : 0.18 + this.kk[s] * 0.82; g.fillStyle = P.ink; g.beginPath(); g.arc(x - G.slotW * 0.24, yt, 3.4 * u * (1 + 0.5 * this.kk[s]), 0, Math.PI * 2); g.fill(); }
+      }
+      g.globalAlpha = 1;
+      // bass: woodcut bars
+      for (let i = 0; i < 8; i++) {
+        const s = b * 8 + i, bn = sg.bass[s]; if (!bn) continue;
+        const x0 = G.nx(s) - G.slotW * 0.32, x1 = G.left + ((s % 8) + Math.min(bn.len, 8 - (s % 8)) - 0.12) * G.slotW, y = G.rowBot(b) - 5.5 * u, hh = 3.6 * u;
+        g.globalAlpha = still ? 0.8 : 0.45 + 0.55 * this.bl[s]; g.fillStyle = this.bl[s] > 0.3 ? P.red : P.ink;
+        g.beginPath(); g.moveTo(x0, y + hh); g.lineTo(x0 + 2.5 * u, y); g.lineTo(x1 + 2.5 * u, y); g.lineTo(x1, y + hh); g.closePath(); g.fill();
+      }
+      g.globalAlpha = 1;
+      // melody: threads + cut-out letters
+      const notes = [];
+      for (let i = 0; i < 8; i++) { const s = b * 8 + i, n = sg.mel[s]; if (n) notes.push({ s, n, x: G.nx(s), y: G.ny(b, n.deg) }); }
+      g.strokeStyle = P.ink; g.globalAlpha = 0.6; g.lineWidth = 0.9 * u; g.beginPath();
+      notes.forEach((p, i) => { if (!i) g.moveTo(p.x, p.y); else { const a = notes[i - 1]; g.quadraticCurveTo((a.x + p.x) / 2, Math.max(a.y, p.y) + 7 * u, p.x, p.y); } });
+      g.stroke();
+      for (const p of notes) {
+        if (p.n.len < 2) continue;
+        const lit = still ? 0.6 : this.lit[p.s], x1 = G.left + ((p.s % 8) + p.n.len - 0.18) * G.slotW;
+        g.globalAlpha = 0.5 + 0.5 * lit; g.strokeStyle = P.red; g.lineWidth = 2 * u;
+        g.beginPath(); g.moveTo(p.x + G.q * 0.55, p.y); g.quadraticCurveTo((p.x + x1) / 2, p.y + 5 * u, x1, p.y - 1 * u); g.stroke();
+      }
+      g.globalAlpha = 1;
+      for (const p of notes) {
+        const code = (p.n.ch || '·').codePointAt(0);
+        cutout(g, P, p.x, p.y, G.q, p.n.ch || '·', (this.seed ^ Math.imul(p.s + 1, 2654435761) ^ Math.imul(code, 40503)) >>> 0,
+          { u, pop: still ? 0 : this.pop[p.s], lit: still ? 0 : this.lit[p.s], kw: p.n.kw });
+      }
+    }
+    if (this.step >= 0 && !still) {
+      const b = this.step >> 3, x = G.left + ((this.step % 8) + Math.min(1, this.frac)) * G.slotW, y0 = G.rowTop(b) + 2 * u;
+      g.strokeStyle = P.red; g.fillStyle = P.red; g.lineWidth = 2 * u;
+      g.beginPath(); g.moveTo(x, y0 + 10 * u); g.lineTo(x, G.rowBot(b) - 2 * u); g.stroke();
+      g.beginPath(); g.moveTo(x - 5 * u, y0); g.lineTo(x + 5 * u, y0); g.lineTo(x, y0 + 9 * u); g.closePath(); g.fill();
+    }
+    g.restore(); g.globalAlpha = 1;
+  }
+}
+const stage = new Stage();
+
+/* live canvas */
+let cssW = 0, cssH = 0, dpr = 1;
+const sctx = els.stage.getContext('2d');
+function sizeStage() {
+  const r = els.stageBox.getBoundingClientRect();
+  cssW = Math.max(10, r.width); cssH = Math.max(10, r.height); dpr = Math.min(2, window.devicePixelRatio || 1);
+  els.stage.width = Math.round(cssW * dpr); els.stage.height = Math.round(cssH * dpr);
+}
+if (window.ResizeObserver) new ResizeObserver(sizeStage).observe(els.stageBox); else window.addEventListener('resize', sizeStage);
+function drawLive() {
+  if (!song || cssW < 120 || cssH < 120) return;
+  const g = sctx;
+  g.setTransform(dpr, 0, 0, dpr, 0, 0);
+  g.fillStyle = pal.sheet; g.fillRect(0, 0, cssW, cssH);
+  stage.u = clamp(cssW / 620, 0.6, 1.25);
+  stage.setRect({ x: 0, y: 0, w: cssW, h: cssH }, gly.h1);
+  stage.draw(g, song, { pal });
+}
+let lastF = performance.now();
+function frame(now) {
+  const dt = Math.min(0.05, (now - lastF) / 1000); lastF = now;
+  if (state.playing && ctx) {
+    const t = ctx.currentTime, sd = stepDur();
+    while (vq.length && vq[0].time <= t) { const e = vq.shift(); visStep = e; stage.onStep(song, e.step, sd); onVisStep(e.step); }
+    if (visStep) stage.frac = (t - visStep.time) / sd;
+  }
+  stage.update(dt);
+  if (state.view === 'loom' && !document.hidden) drawLive();
+  requestAnimationFrame(frame);
+}
+let lastBar = -1;
+function onVisStep(s) {
+  const bar = s >> 3;
+  els.pos.textContent = `${ROMAN[bar]}.${(s % 8 >> 1) + 1}`;
+  if (bar !== lastBar) {
+    lastBar = bar;
+    $$('.now').forEach(e => e.classList.remove('now'));
+    $$(`[data-bar="${bar}"]`).forEach(e => e.classList.add('now'));
+  }
+  if (state.view === 'tune') {
+    const ph = $('#ph');
+    if (ph) {
+      ph.hidden = false; ph.style.gridColumn = colOf(s) + ' / span 1';
+      if (s % 8 === 0) {
+        const w = els.mwrap, left = ph.offsetLeft;
+        if (left < w.scrollLeft + 50 || left > w.scrollLeft + w.clientWidth - 40) w.scrollTo({ left: Math.max(0, left - 60), behavior: 'smooth' });
+      }
+    }
+  }
+}
+els.stageBox.addEventListener('click', toggle);
+
+/* =================== poster / export rendering =================== */
+const DIM = { post: { W: 1080, H: 1350 }, story: { W: 1080, H: 1920 } };
+function tokens(text) { return text.match(/\n|[\u3400-\u9fff\uf900-\ufaff\u3000-\u303f\uff00-\uffef]|[^\s\u3400-\u9fff\uf900-\ufaff\u3000-\u303f\uff00-\uffef]+|[ \t]+/g) || []; }
+function wrapText(g, text, maxW, maxLines) {
+  const lines = []; let line = '';
+  const push = () => { lines.push(line.replace(/\s+$/, '')); line = ''; };
+  for (const tk of tokens(text.trim())) {
+    if (tk === '\n') { push(); continue; }
+    if (/^[ \t]+$/.test(tk) && !line) continue;
+    const tryL = line + tk;
+    if (g.measureText(tryL).width > maxW && line) { push(); line = /^[ \t]+$/.test(tk) ? '' : tk; } else line = tryL;
+  }
+  if (line) push();
+  if (lines.length > maxLines) {
+    const out = lines.slice(0, maxLines);
+    let last = out[maxLines - 1];
+    while (last && g.measureText(last + '……').width > maxW) last = Array.from(last).slice(0, -1).join('');
+    out[maxLines - 1] = last + '……';
+    return out;
+  }
+  return lines;
+}
+function keyInfo() {
+  const P = song.P, M = E.MODES[P.mode];
+  return { key: E.noteName(P.keyRoot, P.flats), zh: M.zh, la: M.la, bpm: state.bpm, pent: P.pent, minor: M.minor };
+}
+function deckle(g, r, seed, amp) {
+  const pts = [], n = 26, k = i => (hash2(seed, 300 + i) - 0.5) * amp;
+  for (let i = 0; i <= n; i++) pts.push([r.x + r.w * i / n, r.y + k(i)]);
+  for (let i = 1; i <= n; i++) pts.push([r.x + r.w + k(40 + i) * 0.6, r.y + r.h * i / n]);
+  for (let i = n - 1; i >= 0; i--) pts.push([r.x + r.w * i / n, r.y + r.h + k(80 + i)]);
+  for (let i = n - 1; i > 0; i--) pts.push([r.x + k(120 + i) * 0.6, r.y + r.h * i / n]);
+  g.beginPath(); pts.forEach((p, i) => (i ? g.lineTo(p[0], p[1]) : g.moveTo(p[0], p[1]))); g.closePath();
+}
+function drawPoster(g, W, H, st, o) {
+  const L = LIGHT, u = W / 1080, story = H / W > 1.5, M = Math.round(64 * u), ki = keyInfo(), seed = gly.h1 >>> 0, rr = k => hash2(seed, 900 + k);
+  g.setTransform(1, 0, 0, 1, 0, 0); g.globalAlpha = 1;
+  g.fillStyle = L.paper; g.fillRect(0, 0, W, H);
+  g.strokeStyle = 'rgba(60,45,30,0.07)'; g.lineWidth = 1; g.beginPath();
+  for (let i = 0; i < 260; i++) { const x = rr(i) * W, y = rr(i + 300) * H, a = rr(i + 600) * Math.PI, l = (6 + rr(i + 900) * 16) * u; g.moveTo(x, y); g.lineTo(x + Math.cos(a) * l, y + Math.sin(a) * l); }
+  g.stroke();
+  // halftone moon
+  const hx = W * (0.62 + rr(1) * 0.22), hy = H * (story ? 0.16 : 0.2), hr = W * 0.34, hs = 13 * u;
+  g.fillStyle = 'rgba(23,21,19,0.55)'; g.beginPath();
+  for (let y = hy - hr; y < hy + hr; y += hs * 0.866) for (let x = hx - hr; x < hx + hr; x += hs) {
+    const xx = x + (Math.round((y - hy) / (hs * 0.866)) % 2 ? hs / 2 : 0), d = Math.hypot(xx - hx, y - hy) / hr; if (d >= 1) continue;
+    const rad = hs * 0.5 * Math.sqrt(0.45 * (1 - d * d) + 0.04 * Math.sin(xx * 0.03)); if (rad < 0.4) continue;
+    g.moveTo(xx + rad, y); g.arc(xx, y, rad, 0, 6.2832);
+  }
+  g.fill();
+  // pasted strips
+  const strip = (x, y, w, h, c, a) => { g.save(); g.translate(x, y); g.rotate(a); g.fillStyle = 'rgba(40,28,16,0.18)'; g.fillRect(3 * u, 4 * u, w, h); g.fillStyle = c; g.fillRect(0, 0, w, h); g.restore(); };
+  strip(W * 0.58, M * 0.6, W * 0.5, 34 * u, L.news, -0.05);
+  strip(-20 * u, H * (story ? 0.27 : 0.31), W * 0.26, 22 * u, L.red, 0.04);
+  // masthead
+  Array.from('文韻織機').forEach((c, i) => cutout(g, L, M + 26 * u + i * 56 * u, M + 26 * u, 46 * u, c, seed + i * 977, { u, tilt: 0.4 }));
+  g.fillStyle = L.ink; g.font = `400 ${24 * u}px ${F.type}`; g.textAlign = 'right'; g.textBaseline = 'middle';
+  g.fillText(`No. ${gly.hex.slice(0, 4)}`, W - M, M + 14 * u);
+  g.fillText(state.seedMode === 'glyph' ? '讀字形版' : '讀意思版', W - M, M + 44 * u);
+  // ransom title from the text itself
+  const chars = Array.from(curText).filter(c => !PUNCT_RE.test(c)), per = story ? 7 : 9, N = Math.min(chars.length, story ? 14 : 9);
+  const q = Math.min((W - 2 * M) / (per * 1.14), (story ? 128 : 100) * u), lines = Math.max(1, Math.ceil(N / per));
+  let y = M + (story ? 190 : 150) * u;
+  for (let i = 0; i < N; i++) {
+    const row = Math.floor(i / per), col = i % per;
+    cutout(g, L, M + q * 0.57 + col * q * 1.14, y + row * q * 1.22 + (rr(i + 40) - 0.5) * 14 * u, q, chars[i], seed + i * 7919, { u, tilt: 0.5 });
+  }
+  y += lines * q * 1.22 + (story ? 40 : 18) * u;
+  // excerpt in book type
+  g.textAlign = 'left'; g.textBaseline = 'alphabetic'; g.fillStyle = L.ink2; g.font = `400 ${(story ? 32 : 28) * u}px ${F.serif}`;
+  const ex = wrapText(g, curText, W * 0.54, story ? 6 : 3);
+  for (const ln of ex) { y += (story ? 50 : 44) * u; g.fillText(ln, M, y); }
+  // red stamp: key, mode, tempo
+  const sx = W - M - 140 * u, sy = y - (story ? 90 : 70) * u, R = (story ? 138 : 120) * u;
+  g.save(); g.translate(sx, sy); g.rotate(-0.24); g.strokeStyle = L.red; g.fillStyle = L.red; g.globalAlpha = 0.92;
+  g.lineWidth = 6 * u; g.setLineDash([R * 1.2, R * 0.06, R * 0.5, R * 0.05]); g.beginPath(); g.arc(0, 0, R, 0, Math.PI * 2); g.stroke(); g.setLineDash([]);
+  g.lineWidth = 2.2 * u; g.beginPath(); g.arc(0, 0, R * 0.84, 0, Math.PI * 2); g.stroke();
+  g.textAlign = 'center'; g.textBaseline = 'middle';
+  g.font = `italic 800 ${R * 0.56}px ${F.didone}`; g.fillText(ki.key, 0, -R * 0.24);
+  g.font = `900 ${R * 0.2}px ${F.serif}`; g.fillText(ki.zh, 0, R * 0.17);
+  g.font = `400 ${R * 0.16}px ${F.type}`; g.fillText(`${ki.bpm} BPM${ki.pent ? '  五聲' : ''}`, 0, R * 0.47);
+  g.restore(); g.globalAlpha = 1;
+  // the score, pasted as a deckled print
+  y += (story ? 70 : 46) * u;
+  const footH = (story ? 150 : 124) * u, sr = { x: M, y, w: W - 2 * M, h: H - M - footH - y }, rot = (rr(5) - 0.5) * 0.02;
+  g.save(); g.translate(W / 2, sr.y + sr.h / 2); g.rotate(rot); g.translate(-W / 2, -(sr.y + sr.h / 2));
+  deckle(g, { x: sr.x + 5 * u, y: sr.y + 8 * u, w: sr.w, h: sr.h }, seed, 9 * u); g.fillStyle = 'rgba(40,28,16,0.2)'; g.fill();
+  deckle(g, sr, seed, 9 * u); g.fillStyle = L.sheet; g.fill();
+  g.save(); deckle(g, sr, seed, 9 * u); g.clip();
+  st.u = sr.w / 620 * 0.9;
+  st.setRect(sr, gly.h1);
+  if (o.prime) st.simulate(song, stepDur());
+  st.draw(g, song, { pal: L, still: !!o.still });
+  g.restore();
+  // tape
+  const tape = (x, yy, a) => { g.save(); g.translate(x, yy); g.rotate(a); g.fillStyle = 'rgba(230,212,140,0.62)'; g.fillRect(-60 * u, -16 * u, 120 * u, 32 * u); g.restore(); };
+  tape(sr.x + 50 * u, sr.y, -0.35); tape(sr.x + sr.w - 40 * u, sr.y + 4 * u, 0.3);
+  g.restore();
+  // footer: gramophone and a typed line
+  const fy = H - M - footH + 30 * u;
+  drawIll(g, 'gramophone', M - 6 * u, fy - 6 * u, 104 * u, -0.08, L, u);
+  g.fillStyle = L.ink; g.font = `400 ${24 * u}px ${F.type}`; g.textAlign = 'left'; g.textBaseline = 'middle';
+  g.fillText(state.seedMode === 'glyph' ? '每個字的編號，決定一個音的高低與長短。' : '詞語的情緒決定調性，文字一字一字填進旋律。', M + 116 * u, fy + 30 * u);
+  g.fillStyle = L.ink2; g.fillText(song.labels.map(l => l.name).join('  →  '), M + 116 * u, fy + 66 * u);
+  g.textAlign = 'right'; g.fillStyle = L.red; g.font = `900 ${26 * u}px ${F.sans}`; g.fillText('#文韻織機', W - M, fy + 66 * u);
+  const by = H - M + 14 * u, bw = W - 2 * M, bh = 10 * u;
+  if (o.progress != null) {
+    g.fillStyle = 'rgba(23,21,19,0.12)'; g.fillRect(M, by, bw, bh);
+    g.fillStyle = L.red; g.beginPath(); const pw = bw * clamp(o.progress, 0, 1);
+    g.moveTo(M, by); for (let i = 0; i <= 20; i++) g.lineTo(M + pw * i / 20, by + (hash2(seed, 700 + i) - 0.5) * 3 * u);
+    g.lineTo(M + pw, by + bh); g.lineTo(M, by + bh); g.closePath(); g.fill();
+  } else {
+    g.strokeStyle = L.ink; g.lineWidth = 2 * u; g.beginPath(); g.moveTo(M, by + bh / 2); g.lineTo(W - M, by + bh / 2); g.stroke();
+  }
+}
+async function fontsReady() {
+  if (!document.fonts || !document.fonts.load) return;
+  const sample = '文韻織機讀字形意思版詞語的情緒決定調性每個字編號音高低與長短一填進旋律' + curText.slice(0, 240) + song.labels.map(l => l.name).join('') + E.MODES[song.P.mode].zh;
+  try {
+    await Promise.race([Promise.all([
+      document.fonts.load(`900 40px ${F.serif}`, sample), document.fonts.load(`400 40px ${F.serif}`, sample), document.fonts.load(`900 40px ${F.sans}`, sample),
+      document.fonts.load(`700 40px ${F.hand}`, sample), document.fonts.load(`italic 800 40px ${F.didone}`, 'ABCDEFG♯♭abc0123456789'),
+      document.fonts.load(`700 40px ${F.didone}`, 'ABCDEFGmaj7♯♭'), document.fonts.load(`400 40px ${F.grot}`, 'ABCabc'),
+      document.fonts.load(`400 40px ${F.type}`, 'No.0123456789ABCDEF BPM ivxIVX')]), new Promise(r => setTimeout(r, 3000))]);
+  } catch (e) { /* system fonts */ }
+}
+function renderPreview() {
+  if (!song) return;
+  const { W, H } = DIM[state.fmt];
+  els.pv.width = W; els.pv.height = H;
+  drawPoster(els.pv.getContext('2d'), W, H, new Stage(), { still: true, prime: true });
+}
+
+
+/* audio export */
+async function renderAudio(loops, tail, fade) {
+  const sr = ctx ? ctx.sampleRate : 48000, sd = stepDur(), lead = 0.05, dur = lead + loops * 32 * sd + tail;
+  const OAC = window.OfflineAudioContext || window.webkitOfflineAudioContext;
+  const oac = new OAC(2, Math.ceil(dur * sr), sr);
+  const R = buildRig(oac);
+  prepare(oac);
+  for (let L = 0; L < loops; L++) for (let s = 0; s < 32; s++) playStep(R, s, lead + (L * 32 + s) * sd, sd);
+  if (fade) { const fs = Math.max(0, dur - fade); R.master.gain.setValueAtTime(state.master, fs); R.master.gain.linearRampToValueAtTime(0.0001, dur); }
+  return { buf: await oac.startRendering(), lead, sd, sr };
+}
+function encodeWav(ab, start, end) {
+  const ch = ab.numberOfChannels, n = end - start, sr = ab.sampleRate, out = new ArrayBuffer(44 + n * ch * 2), v = new DataView(out);
+  const ws = (o, s) => { for (let i = 0; i < s.length; i++) v.setUint8(o + i, s.charCodeAt(i)); };
+  ws(0, 'RIFF'); v.setUint32(4, 36 + n * ch * 2, true); ws(8, 'WAVE'); ws(12, 'fmt '); v.setUint32(16, 16, true); v.setUint16(20, 1, true);
+  v.setUint16(22, ch, true); v.setUint32(24, sr, true); v.setUint32(28, sr * ch * 2, true); v.setUint16(32, ch * 2, true); v.setUint16(34, 16, true);
+  ws(36, 'data'); v.setUint32(40, n * ch * 2, true);
+  const data = []; for (let c = 0; c < ch; c++) data.push(ab.getChannelData(c));
+  let o = 44;
+  for (let i = start; i < end; i++) for (let c = 0; c < ch; c++) { const x = clamp(data[c][i], -1, 1); v.setInt16(o, x < 0 ? x * 32768 : x * 32767, true); o += 2; }
+  return new Uint8Array(out);
+}
+const CRC = (() => { const t = new Uint32Array(256); for (let n = 0; n < 256; n++) { let c = n; for (let k = 0; k < 8; k++) c = c & 1 ? 0xedb88320 ^ (c >>> 1) : c >>> 1; t[n] = c >>> 0; } return t; })();
+function crc32(b) { let c = 0xffffffff; for (let i = 0; i < b.length; i++) c = CRC[(c ^ b[i]) & 255] ^ (c >>> 8); return (c ^ 0xffffffff) >>> 0; }
+function zipStore(files) {
+  const enc = new TextEncoder(), parts = [], cen = [], d = new Date();
+  const dt = ((d.getFullYear() - 1980) << 9) | ((d.getMonth() + 1) << 5) | d.getDate(), tm = (d.getHours() << 11) | (d.getMinutes() << 5) | (d.getSeconds() >> 1);
+  let off = 0;
+  for (const f of files) {
+    const nm = enc.encode(f.name), data = f.data, crc = crc32(data);
+    const lh = new DataView(new ArrayBuffer(30));
+    lh.setUint32(0, 0x04034b50, true); lh.setUint16(4, 20, true); lh.setUint16(6, 0x0800, true); lh.setUint16(8, 0, true);
+    lh.setUint16(10, tm, true); lh.setUint16(12, dt, true); lh.setUint32(14, crc, true); lh.setUint32(18, data.length, true); lh.setUint32(22, data.length, true);
+    lh.setUint16(26, nm.length, true); lh.setUint16(28, 0, true);
+    parts.push(new Uint8Array(lh.buffer), nm, data);
+    const ch = new DataView(new ArrayBuffer(46));
+    ch.setUint32(0, 0x02014b50, true); ch.setUint16(4, 20, true); ch.setUint16(6, 20, true); ch.setUint16(8, 0x0800, true); ch.setUint16(10, 0, true);
+    ch.setUint16(12, tm, true); ch.setUint16(14, dt, true); ch.setUint32(16, crc, true); ch.setUint32(20, data.length, true); ch.setUint32(24, data.length, true);
+    ch.setUint16(28, nm.length, true); ch.setUint32(42, off, true);
+    cen.push(new Uint8Array(ch.buffer), nm);
+    off += 30 + nm.length + data.length;
+  }
+  const cs = cen.reduce((a, b) => a + b.length, 0), end = new DataView(new ArrayBuffer(22));
+  end.setUint32(0, 0x06054b50, true); end.setUint16(8, files.length, true); end.setUint16(10, files.length, true); end.setUint32(12, cs, true); end.setUint32(16, off, true);
+  return new Blob([...parts, ...cen, new Uint8Array(end.buffer)], { type: 'application/zip' });
+}
+function infoText() {
+  const ki = keyInfo();
+  return [`文韻織機 text loom`, ``, `文字：`, curText, ``, `種子：${state.seedMode === 'glyph' ? '讀字形（文字種子）' : '讀意思（語意種子）'}`,
+    `調性：${ki.key} ${ki.zh}（${ki.la}）${ki.pent ? '，旋律採五聲音階' : ''}`, `速度：${ki.bpm} BPM，4/4 拍，四小節循環`,
+    `和聲：${song.labels.map(l => `${l.name}（${l.roman}）`).join(' → ')}`,
+    `音色：旋律 ${INSTR[state.inst.melody].name}、和聲 ${INSTR[state.inst.chords].name}、低音 ${INSTR[state.inst.bass].name}、節奏 ${KITS[state.inst.drums]}`, ``,
+    `textloom-full.wav：四輪循環加淡出。`, `textloom-loop.wav：一輪循環，可在編曲軟體中無縫重複。`].join('\r\n');
+}
+async function exportAudio() {
+  const sd = stepDur();
+  setOstat('正在離線演算音訊…');
+  const f = await renderAudio(4, 3.5, 5);
+  const ls = Math.round((f.lead + 32 * sd) * f.sr), ll = Math.round(32 * sd * f.sr);
+  setOstat('正在封裝 WAV…');
+  const loop = encodeWav(f.buf, ls, Math.min(f.buf.length, ls + ll));
+  const full = encodeWav(f.buf, 0, f.buf.length);
+  return zipStore([{ name: 'textloom-full.wav', data: full }, { name: 'textloom-loop.wav', data: loop }, { name: 'about.txt', data: new TextEncoder().encode(infoText()) }]);
+}
+async function exportPNG() {
+  await fontsReady();
+  const { W, H } = DIM[state.fmt], cv = document.createElement('canvas'); cv.width = W; cv.height = H;
+  drawPoster(cv.getContext('2d'), W, H, new Stage(), { still: true, prime: true });
+  return await new Promise(res => cv.toBlob(res, 'image/png'));
+}
+function pickMime() {
+  if (!window.MediaRecorder || !MediaRecorder.isTypeSupported) return '';
+  const list = ['video/mp4;codecs=avc1.42E01E,mp4a.40.2', 'video/mp4;codecs=avc1,mp4a.40.2', 'video/mp4;codecs=avc1,opus', 'video/mp4',
+    'video/webm;codecs=vp9,opus', 'video/webm;codecs=vp8,opus', 'video/webm'];
+  return list.find(m => { try { return MediaRecorder.isTypeSupported(m); } catch (e) { return false; } }) || '';
+}
+const canVideo = () => !!(window.MediaRecorder && HTMLCanvasElement.prototype.captureStream);
+let recording = false;
+async function exportVideo() {
+  if (!canVideo()) throw new Error('novideo');
+  if (!initAudio()) throw new Error('noaudio');
+  if (ctx.state !== 'running') await ctx.resume();
+  if (state.playing) stop();
+  recording = true;
+  setOstat('正在準備聲音…');
+  const loops = 2, a = await renderAudio(loops, 2.2, 2.8);
+  await fontsReady();
+  const { W, H } = DIM[state.fmt], cv = els.pv; cv.width = W; cv.height = H;
+  const g = cv.getContext('2d'), st = new Stage();
+  drawPoster(g, W, H, st, { progress: 0 });
+  const vs = cv.captureStream(30), dest = ctx.createMediaStreamDestination();
+  const src = ctx.createBufferSource(); src.buffer = a.buf; src.connect(dest);
+  const mon = ctx.createGain(); mon.gain.value = 0.8; src.connect(mon); mon.connect(ctx.destination);
+  const stream = new MediaStream([...vs.getVideoTracks(), ...dest.stream.getAudioTracks()]);
+  const mime = pickMime();
+  let rec;
+  try { rec = new MediaRecorder(stream, mime ? { mimeType: mime, videoBitsPerSecond: 8e6, audioBitsPerSecond: 192e3 } : {}); }
+  catch (e) { rec = new MediaRecorder(stream); }
+  const chunks = [];
+  rec.ondataavailable = e => { if (e.data && e.data.size) chunks.push(e.data); };
+  const stopped = new Promise(r => { rec.onstop = r; });
+  $('#recbar').hidden = false;
+  rec.start(500);
+  const t0 = ctx.currentTime + 0.2, total = a.buf.duration;
+  src.start(t0);
+  let last = t0, k = -1;
+  await new Promise(resolve => {
+    const tick = () => {
+      const now = ctx.currentTime, el = now - t0;
+      if (el >= 0) {
+        const idx = Math.floor((el - a.lead) / a.sd);
+        while (k < idx && k < loops * 32 - 1) { k++; if (k >= 0) st.onStep(song, k % 32, a.sd); }
+        st.frac = (el - a.lead) / a.sd - k;
+        if (idx >= loops * 32) st.step = -1;
+        st.update(Math.max(0, now - last));
+      }
+      last = Math.max(now, t0);
+      drawPoster(g, W, H, st, { progress: el / total });
+      $('#recFill').style.width = (clamp(el / total, 0, 1) * 100) + '%';
+      setOstat(`錄製中 ${Math.max(0, Math.floor(el))} / ${Math.ceil(total)} 秒，請讓這個頁面保持在前景`);
+      if (el > total + 0.15) resolve(); else requestAnimationFrame(tick);
+    };
+    requestAnimationFrame(tick);
+  });
+  rec.stop(); await stopped;
+  src.disconnect(); mon.disconnect(); stream.getTracks().forEach(t => t.stop());
+  $('#recbar').hidden = true; recording = false;
+  const type = rec.mimeType || mime || 'video/webm';
+  return { blob: new Blob(chunks, { type }), ext: /mp4/.test(type) ? 'mp4' : 'webm' };
+}
+
+/* downloads */
+const dlP = (window.claude && typeof window.claude.use === 'function') ? window.claude.use('downloads').catch(() => null) : Promise.resolve(undefined);
+function baseName() { const ki = keyInfo(); return `textloom-${ki.key.replace('♯', 's').replace('♭', 'b')}-${ki.la.toLowerCase()}-${ki.bpm}bpm`; }
+async function saveFile(name, blob) {
+  const d = await dlP;
+  if (d) {
+    try { await d.save({ filename: name, data: blob }); setOstat('已交給瀏覽器儲存：' + name); return true; }
+    catch (e) {
+      const c = e && e.code;
+      setOstat(c === 'declined' ? '已取消儲存。' : c === 'rate_limited' ? '已有一個儲存視窗開著，請稍後再試。' : c === 'too_large' ? '檔案太大，請改用較短的版本。' : '這個檢視目前無法儲存檔案。');
+      return false;
+    }
+  }
+  if (d === undefined) {
+    const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = name; document.body.appendChild(a); a.click();
+    setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 5000);
+    setOstat('已下載：' + name); return true;
+  }
+  setOstat('這個檢視目前無法下載檔案。'); return false;
+}
+function setOstat(s) { $('#ostat').textContent = s; }
+let busy = false;
+async function doDownload(kind) {
+  if (busy || !song) return;
+  busy = true; $$('[data-dl]').forEach(b => { b.disabled = true; });
+  try {
+    if (kind === 'png') { setOstat('正在排版圖卡…'); const b = await exportPNG(); await saveFile(`${baseName()}-${state.fmt}.png`, b); }
+    else if (kind === 'audio') { const z = await exportAudio(); await saveFile(`${baseName()}-audio.zip`, z); }
+    else if (kind === 'video') { const v = await exportVideo(); renderPreview(); await saveFile(`${baseName()}-${state.fmt}.${v.ext}`, v.blob); }
+  } catch (e) {
+    setOstat(e && e.message === 'novideo' ? '這個瀏覽器不支援錄製影片，請改用圖卡或純音樂。' : '輸出失敗，請再試一次。');
+    recording = false; $('#recbar').hidden = true;
+  } finally {
+    busy = false; $$('[data-dl]').forEach(b => { b.disabled = false; });
+  }
+}
+
+/* share */
+function caption(short) {
+  const ki = keyInfo(), t = curText.replace(/\s+/g, ' ').trim(), lim = short ? 34 : 70;
+  const ex = Array.from(t).length > lim ? Array.from(t).slice(0, lim).join('') + '……' : t;
+  return [`「${ex}」`, ``, `我把這段文字織成了一段音樂。`, `${ki.key} ${ki.zh}，每分鐘 ${ki.bpm} 拍，和聲 ${song.labels.map(l => l.name).join(' → ')}。`,
+    state.seedMode === 'glyph' ? '讀的是字形：每個字的編號決定一個音。' : '讀的是意思：詞語的情緒決定了調性。', ``, `#文韻織機 #文字變音樂 #生成音樂`].join('\n');
+}
+function shareLinks() {
+  const full = els.cap.value, short = full.length > 120 ? caption(true) : full;
+  $('#shX').href = 'https://twitter.com/intent/tweet?text=' + encodeURIComponent(short);
+  $('#shTh').href = 'https://www.threads.net/intent/post?text=' + encodeURIComponent(full);
+  $('#shLine').href = 'https://line.me/R/share?text=' + encodeURIComponent(full);
+}
+async function copyCaption() {
+  const t = els.cap.value;
+  try { await navigator.clipboard.writeText(t); setOstat('文案已複製。'); return; } catch (e) { /* fall through */ }
+  els.cap.focus(); els.cap.select();
+  try { if (document.execCommand('copy')) { setOstat('文案已複製。'); return; } } catch (e) { /* ignore */ }
+  setOstat('已選取文案，請用鍵盤或長按複製。');
+}
+function openOut(tab) {
+  if (!song) return;
+  els.cap.value = caption(false); shareLinks();
+  setTab(tab); setFmt(state.fmt); setOstat('');
+  $('#sysShare').hidden = !(navigator.canShare && navigator.share);
+  $('#vidExt').textContent = '.' + (/mp4/.test(pickMime()) ? 'mp4' : 'webm');
+  const secs = Math.round((64 * stepDur()) + 2.2);
+  $('#vidDesc').textContent = canVideo() ? `畫面隨音樂流動，約 ${secs} 秒，適合 Reels、Shorts 與限時動態。` : '這個瀏覽器不支援錄製影片。';
+  if (els.dlg.showModal) els.dlg.showModal(); else els.dlg.setAttribute('open', '');
+  fontsReady().then(renderPreview);
+  renderPreview();
+}
+function setTab(tab) {
+  $$('.dh [data-tab]').forEach(b => b.setAttribute('aria-selected', String(b.dataset.tab === tab)));
+  $$('[data-pane]').forEach(p => { p.hidden = p.dataset.pane !== tab; });
+}
+function setFmt(f) {
+  if (recording) return;
+  state.fmt = f;
+  $$('[data-fmt]').forEach(b => b.setAttribute('aria-checked', String(b.dataset.fmt === f)));
+  renderPreview();
+}
+$$('.dh [data-tab]').forEach(b => b.addEventListener('click', () => setTab(b.dataset.tab)));
+$$('[data-fmt]').forEach(b => b.addEventListener('click', () => setFmt(b.dataset.fmt)));
+$$('[data-dl]').forEach(b => b.addEventListener('click', () => doDownload(b.dataset.dl)));
+$('#closeOut').addEventListener('click', () => { if (!recording) els.dlg.close ? els.dlg.close() : els.dlg.removeAttribute('open'); });
+els.dlg.addEventListener('cancel', e => { if (recording) e.preventDefault(); });
+$('#copyCap').addEventListener('click', copyCaption);
+els.cap.addEventListener('input', shareLinks);
+$('#sysShare').addEventListener('click', async () => {
+  try {
+    setOstat('正在排版圖卡…');
+    const b = await exportPNG(), file = new File([b], `${baseName()}.png`, { type: 'image/png' });
+    if (navigator.canShare && !navigator.canShare({ files: [file] })) throw new Error('nofile');
+    await navigator.share({ files: [file], text: els.cap.value, title: '文韻織機' });
+    setOstat('已開啟系統分享。');
+  } catch (e) {
+    if (e && e.name === 'AbortError') { setOstat(''); return; }
+    $('#sysShare').hidden = true; setOstat('這個環境不支援系統分享，請改用下載圖卡。');
+  }
+});
+$('#openShare').addEventListener('click', () => openOut('share'));
+$('#openDl').addEventListener('click', () => openOut('dl'));
+
+/* =================== tune page =================== */
+const colOf = s => 2 + s + (s >> 3);
+const PENT_NAMES = ['宮', '商', '角', '徵', '羽'];
+function degLabel(deg, P) {
+  const n = P.melScale.length, oct = Math.floor(deg / n), i = deg % n, dot = oct ? '<i class="dot"></i>' : '';
+  return n === 5 ? `<span class="jp zh">${PENT_NAMES[i]}${dot}</span>` : `<span class="jp">${i + 1}${dot}</span>`;
+}
+function renderMatrix() {
+  const P = song.P, M = E.MAXDEG, mtx = els.matrix;
+  mtx.style.gridTemplateColumns = 'var(--lw) ' + Array(4).fill('repeat(8,var(--c))').join(' 8px ');
+  mtx.style.gridTemplateRows = `22px 38px repeat(${M + 1},var(--c)) 8px var(--c) 8px repeat(3,var(--c))`;
+  let h = '';
+  for (let s = 0; s < 32; s++) h += `<div class="hd${s % 8 === 0 ? ' bar' : ''}" style="grid-row:1;grid-column:${colOf(s)}">${s % 8 === 0 ? ROMAN[s >> 3] : (s % 2 === 0 ? '·' : '')}</div>`;
+  h += '<div class="lab" style="grid-row:2;grid-column:1">和聲</div>';
+  song.labels.forEach((l, b) => { h += `<div class="chd" data-bar="${b}" style="grid-row:2;grid-column:${colOf(b * 8)}/span 8"><b>${l.name}</b><i>${l.roman}</i></div>`; });
+  const occ = new Array(32).fill(null);
+  song.mel.forEach((n, s) => { if (n) for (let k = 0; k < n.len && s + k < 32; k++) occ[s + k] = { deg: n.deg, on: k === 0 }; });
+  for (let deg = M; deg >= 0; deg--) {
+    const row = 3 + (M - deg);
+    h += `<div class="lab" style="grid-row:${row};grid-column:1">${degLabel(deg, P)}</div>`;
+    for (let s = 0; s < 32; s++) {
+      const o = occ[s]; let cls = 'c m';
+      if (o && o.deg === deg) cls += o.on ? ' on' : ' tail'; else if (E.isChordTone(deg, song.chords[s >> 3], P)) cls += ' ct';
+      h += `<div class="${cls}" data-r="m" data-s="${s}" data-deg="${deg}" style="grid-row:${row};grid-column:${colOf(s)}"></div>`;
+    }
+  }
+  const br = M + 5;
+  h += `<div class="lab" style="grid-row:${br};grid-column:1">低音</div>`;
+  const bo = new Array(32).fill(null);
+  song.bass.forEach((n, s) => { if (n) for (let k = 0; k < n.len && s + k < 32; k++) bo[s + k] = { on: k === 0, midi: n.midi }; });
+  for (let s = 0; s < 32; s++) {
+    const o = bo[s], title = o && o.on ? ` title="${E.noteName(o.midi, P.flats)}${Math.floor(o.midi / 12) - 1}"` : '';
+    h += `<div class="c bs${o ? (o.on ? ' on' : ' tail') : ''}" data-r="b" data-s="${s}"${title} style="grid-row:${br};grid-column:${colOf(s)}"></div>`;
+  }
+  const kl = KIT_LABELS[state.inst.drums];
+  ['k', 's', 'h'].forEach((r, i) => {
+    const row = M + 7 + i;
+    h += `<div class="lab" style="grid-row:${row};grid-column:1">${kl[i]}</div>`;
+    for (let s = 0; s < 32; s++) { const v = song.drums[r][s]; h += `<div class="c d${v > 0 ? ' on' : ''}" data-r="${r}" data-s="${s}" style="grid-row:${row};grid-column:${colOf(s)};--v:${v.toFixed(2)}"></div>`; }
+  });
+  h += '<div class="ph" id="ph" hidden style="grid-row:1/-1;grid-column:2/span 1"></div>';
+  mtx.innerHTML = h;
+  lastBar = -1;
+}
+function editMelody(s, deg) {
+  const mel = song.mel; let owner = -1;
+  for (let k = s; k >= 0; k--) if (mel[k]) { if (k + mel[k].len > s) owner = k; break; }
+  if (owner === s && mel[s].deg === deg) { mel[s] = null; return; }
+  if (owner === s) mel[s].deg = deg;
+  else {
+    if (owner >= 0) mel[owner].len = s - owner;
+    let nxt = s + 1; while (nxt < 32 && !mel[nxt]) nxt++;
+    const units = curText.match(/[\u3400-\u9fff\uf900-\ufaff]|[A-Za-z0-9’']+/g) || ['·'];
+    mel[s] = { deg, len: Math.max(1, Math.min(2, nxt - s, ((s >> 3) + 1) * 8 - s)), vel: 0.8, ch: units[s % units.length] };
+  }
+  audition(() => playNote(live, 'melody', state.inst.melody, melMidi(s, deg), ctx.currentTime + 0.01, 0.4, 0.8));
+}
+els.matrix.addEventListener('click', e => {
+  const c = e.target.closest('.c'); if (!c || !song) return;
+  const s = +c.dataset.s, r = c.dataset.r;
+  if (r === 'm') editMelody(s, +c.dataset.deg);
+  else if (PART[r]) {
+    const arr = song.drums[r]; arr[s] = arr[s] > 0 ? 0 : 0.85;
+    if (arr[s] > 0) audition(() => playDrum(live, PART[r], ctx.currentTime + 0.01, 0.85));
+  } else return;
+  const sl = els.mwrap.scrollLeft; renderMatrix(); els.mwrap.scrollLeft = sl;
+});
+function renderReading() {
+  const P = song.P, ex = Math.round((sem.V + 1) / 2 * 8), ey = Math.round((1 - (sem.A + 1) / 2) * 8);
+  let eh = '';
+  for (let y = 0; y < 9; y++) for (let x = 0; x < 9; x++) eh += `<span class="${x === ex && y === ey ? 'hit' : (x === 4 || y === 4 ? 'ax' : '')}"></span>`;
+  $('#emo').innerHTML = eh;
+  let hh = '';
+  for (let r = 0; r < 8; r++) for (let c = 0; c < 8; c++) { const cc = c < 4 ? c : 7 - c; hh += `<span class="${(gly.h1 >>> (r * 4 + cc)) & 1 ? 'on' : ''}"></span>`; }
+  $('#hgrid').innerHTML = hh;
+  $('#gstats').innerHTML = `<span>字元</span><b>${gly.count}</b><span>標點</span><b>${gly.punct}</b><span>漢字</span><b>${Math.round(gly.cjkRatio * 100)}%</b><span>雜湊</span><b>${gly.hex.slice(0, 8)}</b>`;
+  $('#gloss').innerHTML = longGloss();
+}
+function syncOverrides() {
+  $('#ovKey').value = state.ov.key; $('#ovMode').value = state.ov.mode; $('#ovScale').value = state.ov.scale;
+  const P = song && song.P;
+  if (P) {
+    $('#ovKey').options[0].textContent = `自動（${E.noteName(P.auto.key, P.flats)}）`;
+    $('#ovMode').options[0].textContent = `自動（${E.MODES[P.auto.mode].zh}）`;
+    $('#ovScale').options[0].textContent = `自動（${P.auto.pent ? '五聲' : '七聲'}）`;
+  }
+  $('#varOut').textContent = state.variation ? `第 ${state.variation + 1} 版` : '原版';
+  $('#varPrev').disabled = state.variation === 0;
+}
+$('#ovKey').innerHTML = '<option value="">自動</option>' + KEYS.map((k, i) => `<option value="${i}">${k}</option>`).join('');
+$('#ovMode').innerHTML = '<option value="">自動</option>' + MODE_KEYS.map(m => `<option value="${m}">${E.MODES[m].zh}</option>`).join('');
+['ovKey', 'ovMode', 'ovScale'].forEach(id => $('#' + id).addEventListener('change', e => {
+  state.ov[{ ovKey: 'key', ovMode: 'mode', ovScale: 'scale' }[id]] = e.target.value; generate(true);
+}));
+$('#varPrev').addEventListener('click', () => { if (state.variation > 0) { state.variation--; generate(true); } });
+$('#varNext').addEventListener('click', () => { state.variation++; generate(true); });
+
+/* tracks & knobs */
+function fill(el) { el.style.setProperty('--p', ((el.value - el.min) / (el.max - el.min) * 100) + '%'); }
+function optionsFor(tr) {
+  if (tr === 'drums') return Object.entries(KITS).map(([k, v]) => `<option value="${k}">${v}</option>`).join('');
+  let h = '';
+  for (const g of ['s', 'v', 'b']) {
+    const list = TRACK_OPTS[tr].filter(id => INSTR[id].group === g);
+    if (list.length) h += `<optgroup label="${GROUPS[g]}">` + list.map(id => `<option value="${id}">${INSTR[id].name}</option>`).join('') + '</optgroup>';
+  }
+  return h;
+}
+els.tracks.innerHTML = TRACKS.map(t => `<div class="track" data-tr="${t.id}"><div class="tname">${t.zh}</div>` +
+  `<select aria-label="${t.zh}音色">${optionsFor(t.id)}</select><input type="range" min="0" max="100" step="1" aria-label="${t.zh}音量">` +
+  `<button class="mute" aria-pressed="false" aria-label="${t.zh}靜音" title="靜音">靜</button></div>`).join('');
+function syncTracks() {
+  for (const t of TRACKS) {
+    const row = els.tracks.querySelector(`[data-tr="${t.id}"]`);
+    row.querySelector('select').value = state.inst[t.id];
+    const rg = row.querySelector('input'); rg.value = Math.round(state.vol[t.id] * 100); fill(rg);
+    row.querySelector('.mute').setAttribute('aria-pressed', String(state.mute[t.id]));
+  }
+  els.auto.checked = state.auto;
+}
+els.tracks.addEventListener('change', e => {
+  if (e.target.tagName !== 'SELECT') return;
+  const tr = e.target.closest('.track').dataset.tr;
+  state.inst[tr] = e.target.value; state.auto = false; els.auto.checked = false;
+  if (ctx) prepare(ctx);
+  if (tr === 'drums' && song) { const sl = els.mwrap.scrollLeft; renderMatrix(); els.mwrap.scrollLeft = sl; }
+  save();
+});
+els.tracks.addEventListener('input', e => {
+  if (e.target.type !== 'range') return;
+  const tr = e.target.closest('.track').dataset.tr; state.vol[tr] = e.target.value / 100; fill(e.target); setTrackGain(tr); save();
+});
+els.tracks.addEventListener('click', e => {
+  const b = e.target.closest('.mute'); if (!b) return;
+  const tr = b.closest('.track').dataset.tr; state.mute[tr] = !state.mute[tr]; b.setAttribute('aria-pressed', String(state.mute[tr])); setTrackGain(tr);
+});
+els.auto.addEventListener('change', () => {
+  state.auto = els.auto.checked;
+  if (state.auto && song) { Object.assign(state.inst, autoInst(song.P)); syncTracks(); if (ctx) prepare(ctx); renderMatrix(); }
+  save();
+});
+const KNOBS = {
+  tempo: { get: () => state.bpm, set: v => { state.bpm = v; renderReadout(); }, fmt: v => v },
+  swing: { get: () => Math.round(state.swing * 100), set: v => { state.swing = v / 100; }, fmt: v => v + '%' },
+  reverb: { get: () => Math.round(state.reverb * 100), set: v => { state.reverb = v / 100; if (live) live.revIn.gain.setTargetAtTime(state.reverb, ctx.currentTime, 0.05); }, fmt: v => v + '%' },
+  master: { get: () => Math.round(state.master * 100), set: v => { state.master = v / 100; if (live) live.master.gain.setTargetAtTime(state.master, ctx.currentTime, 0.03); }, fmt: v => v + '%' },
+};
+function syncKnobs() { for (const id in KNOBS) { const el = $('#' + id); el.value = KNOBS[id].get(); fill(el); $('#' + id + 'Out').textContent = KNOBS[id].fmt(+el.value); } }
+for (const id in KNOBS) {
+  const el = $('#' + id);
+  el.addEventListener('input', () => { KNOBS[id].set(+el.value); fill(el); $('#' + id + 'Out').textContent = KNOBS[id].fmt(+el.value); save(); });
+}
+
+/* =================== readouts & method =================== */
+function tempoWord(b) { return b < 72 ? '慢板' : b < 92 ? '行板' : b < 112 ? '中板' : b < 136 ? '快板' : '急板'; }
+function moodWord(V, A) {
+  if (V > 0.2) return A > 0.2 ? '歡快明亮' : '溫暖寧靜';
+  if (V < -0.2) return A > 0.2 ? '激昂緊張' : '憂傷沉靜';
+  return A > 0.2 ? '躍動不安' : '平和內斂';
+}
+const signed = v => (v >= 0 ? '+' : '−') + Math.abs(v).toFixed(2);
+function renderReadout() {
+  if (!song) return;
+  const P = song.P, ki = keyInfo();
+  if (P.source === 'semantic') {
+    const kws = sem.top.slice(0, 6);
+    $('#roRead').innerHTML = (kws.length ? `<div class="kwl" aria-label="${esc(kws.map(h => h.term).join('、'))}">${kws.map((h, i) => ransomHTML(h.term, 77 + i * 13, 8)).join('<span class="rn sp"></span>')}</div>` : '沒有明顯的情緒詞') +
+      `<div style="margin-top:6px">讀起來${moodWord(sem.V, sem.A)}</div>`;
+  } else {
+    const notes = song.mel.filter(Boolean).length;
+    $('#roRead').innerHTML = `<span class="big"><span class="num">${gly.count}</span> 個字元</span>前段文字化成 <span class="num">${notes}</span> 個音，標點 <span class="num">${gly.punct}</span> 處變成休止`;
+  }
+  $('#roKey').innerHTML = `<span class="big">${ki.key} ${ki.zh}</span><span class="num">${ki.bpm}</span> BPM，${tempoWord(ki.bpm)}${ki.pent ? '，五聲音階' : ''}`;
+  $('#roCh').innerHTML = `<div class="chs">${song.labels.map((l, b) => `<span data-bar="${b}">${l.name}</span>`).join('')}</div>`;
+  $('#sst').textContent = `${ki.key} ${ki.zh}，${ki.bpm} BPM`;
+  let w;
+  if (P.source === 'semantic') {
+    const words = sem.top.slice(0, 3).map(h => `「${esc(h.term)}」`).join('');
+    w = (words ? `${words}讀起來${moodWord(sem.V, sem.A)}` : `沒有明顯的情緒詞，所以取${moodWord(sem.V, sem.A)}的基調`) +
+      `，所以用 ${ki.key} ${ki.zh}、每分鐘 ${ki.bpm} 拍；文字一字一字剪下來貼進旋律，就是你聽到的聲音。`;
+  } else {
+    w = '每個字的編號決定一個音往上或往下走、拉多長；標點變成休止。每張紙片上的字，就是產生那個音的字。';
+  }
+  $('#why').innerHTML = w;
+}
+function longGloss() {
+  const P = song.P, ki = keyInfo(), prog = song.labels.map(l => `${l.name}（${l.roman}）`).join('、');
+  if (P.source === 'semantic') {
+    const words = sem.top.slice(0, 3).map(h => `「${esc(h.term)}」`).join('');
+    let g = (words ? `${words}等字詞勾勒出${moodWord(sem.V, sem.A)}的意境` : `文中沒有明顯的情緒詞，便取${moodWord(sem.V, sem.A)}之意`) +
+      `（效價 ${signed(sem.V)}，張力 ${signed(sem.A)}）。選用 ${ki.key} ${ki.zh}，${tempoWord(ki.bpm)}每分鐘 ${ki.bpm} 拍，和聲依序是 ${prog}`;
+    if (P.pent) g += '；旋律收進五聲音階';
+    if (P.sevenths) g += '；和弦加入七音，色彩更朦朧';
+    if (song.chords.some(c => c.raise != null)) g += '；句末借用和聲小調的屬和弦，讓循環回到主音時更有歸宿感';
+    return g + '。';
+  }
+  return `只看字形：${gly.count} 個字元逐一化成音符，碼位決定音高起伏與時值，標點化作休止。雜湊值 ${gly.hex.slice(0, 8)} 定下 ${ki.key} ${ki.zh}、每分鐘 ${ki.bpm} 拍，以及 ${prog} 的和聲；每個強拍都吸附到和弦音上，讓字形之聲依然協和。`;
+}
+function renderMethod() {
+  if (!song) return;
+  const ki = keyInfo();
+  $('#lexN').textContent = E.LEX_SIZE;
+  $('#mNow').innerHTML = `目前的文字以<b>${state.seedMode === 'glyph' ? '讀字形' : '讀意思'}</b>生成：情緒座標效價 <b>${signed(sem.V)}</b>、張力 <b>${signed(sem.A)}</b>，結果是 <b>${ki.key} ${ki.zh}</b>，每分鐘 <b>${ki.bpm}</b> 拍。`;
+  const dot = $('#mdot');
+  dot.style.left = ((sem.V + 1) / 2 * 100) + '%'; dot.style.top = ((1 - (sem.A + 1) / 2) * 100) + '%';
+  $('#mapNote').textContent = `紅色方塊是你目前文字的位置。${state.seedMode === 'glyph' ? '現在用的是讀字形，調式改由雜湊值決定，這張圖只供對照。' : ''}${state.ov.mode ? '調式已在調音頁手動指定。' : ''}`;
+  const tr = E.glyphTrace(curText, 10);
+  $('#trace').innerHTML = tr.map(r => r.kind === 'note'
+    ? `<tr><td class="c">${esc(r.c)}</td><td class="g">${r.code}</td><td class="g">${r.move > 0 ? '+' : ''}${r.move}${r.leap ? ' 大跳' : ''}</td><td class="g">${r.len}</td><td>音符</td></tr>`
+    : `<tr><td class="c">${esc(r.c)}</td><td>—</td><td>—</td><td class="g">${r.len || 0}</td><td>${r.kind === 'rest' ? '休止' : '略過'}</td></tr>`).join('');
+}
+
+/* =================== generation & views =================== */
+function autoInst(P) {
+  if (P.source === 'glyph') {
+    const h = P.h2 >>> 0;
+    return { melody: ['piano', 'zheng', 'marimba', 'epiano', 'flute', 'triangle'][h % 6], chords: ['strings', 'epiano', 'piano', 'organ'][(h >>> 4) % 4],
+      bass: ['pbass', 'sub'][(h >>> 7) % 2], drums: P.pent ? 'wood' : ['acoustic', 'electro', 'wood'][(h >>> 9) % 3] };
+  }
+  const t = k => P.tags[k] || 0;
+  if (P.pent) return { melody: 'zheng', chords: 'strings', bass: 'pbass', drums: 'wood' };
+  if (t('storm') >= 1) return { melody: 'sawtooth', chords: 'strings', bass: 'sub', drums: 'acoustic' };
+  if (t('dance') >= 1 || P.A > 0.5) return { melody: 'square', chords: 'epiano', bass: 'sub', drums: 'electro' };
+  if (P.mode === 'lydian' || t('dream') >= 1) return { melody: 'epiano', chords: 'strings', bass: 'sub', drums: 'electro' };
+  if (t('water') + t('nature') >= 1) return { melody: 'flute', chords: 'strings', bass: 'pbass', drums: 'wood' };
+  if (t('night') + t('nostalgia') + t('cold') >= 1 || P.V < -0.2) return { melody: 'piano', chords: 'strings', bass: 'pbass', drums: 'wood' };
+  if (t('bright') >= 1 || P.V > 0.3) return { melody: 'marimba', chords: 'epiano', bass: 'pbass', drums: 'acoustic' };
+  return { melody: 'piano', chords: 'epiano', bass: 'pbass', drums: 'acoustic' };
+}
+function generate(keep) {
+  curText = els.text.value.trim() || SAMPLES[0].text;
+  if (!keep) state.variation = 0;
+  const r = E.make(curText, state.seedMode, state.variation, state.ov);
+  sem = r.sem; gly = r.gly; song = r.song;
+  if (state.auto) { Object.assign(state.inst, autoInst(song.P)); syncTracks(); }
+  state.bpm = song.P.bpm;
+  stage.reset();
+  syncKnobs(); syncOverrides(); renderReadout(); renderReading();
+  const sl = els.mwrap.scrollLeft; renderMatrix(); els.mwrap.scrollLeft = keep ? sl : 0;
+  if (state.view === 'method') renderMethod();
+  if (state.playing && ctx) prepare(ctx);
+  if (document.fonts && document.fonts.load) document.fonts.load(`500 20px ${FONT_CJK}`, curText.slice(0, 300)).catch(() => {});
+  save();
+}
+const VIEWS = ['loom', 'method', 'tune'];
+function go(v, fromHash) {
+  if (!VIEWS.includes(v)) v = 'loom';
+  state.view = v;
+  VIEWS.forEach(id => { $('#v-' + id).hidden = id !== v; });
+  $$('.nav button').forEach(b => { if (b.dataset.go === v) b.setAttribute('aria-current', 'page'); else b.removeAttribute('aria-current'); });
+  if (!fromHash) { try { history.replaceState(null, '', '#' + v); } catch (e) { /* ignore */ } window.scrollTo(0, 0); }
+  if (v === 'method') renderMethod();
+  if (v === 'loom') requestAnimationFrame(sizeStage);
+}
+document.addEventListener('click', e => {
+  const a = e.target.closest('[data-go]'); if (!a) return;
+  e.preventDefault(); go(a.dataset.go, false);
+});
+window.addEventListener('hashchange', () => go(location.hash.slice(1), true));
+
+function setSeed(m) {
+  state.seedMode = m;
+  $$('[role="radio"][data-mode]').forEach(b => b.setAttribute('aria-checked', String(b.dataset.mode === m)));
+  $('#seedNote').textContent = SEED_NOTE[m];
+}
+$$('[role="radio"][data-mode]').forEach(b => b.addEventListener('click', () => { setSeed(b.dataset.mode); generate(false); }));
+$('#samples').innerHTML = SAMPLES.map((s, i) => `<button class="clip" data-i="${i}" style="--r:${((hash2(31, i) - 0.5) * 7).toFixed(1)}deg">${s.label}</button>`).join('');
+$('#samples').addEventListener('click', e => { const b = e.target.closest('.clip'); if (!b) return; els.text.value = SAMPLES[+b.dataset.i].text; generate(false); });
+let typeT = 0;
+els.text.addEventListener('input', () => { clearTimeout(typeT); typeT = setTimeout(() => generate(false), 700); });
+els.listen.addEventListener('click', () => {
+  if (state.playing) { stop(); return; }
+  clearTimeout(typeT);
+  if ((els.text.value.trim() || SAMPLES[0].text) !== curText) generate(false);
+  start();
+  if (window.innerWidth < 960) els.stageBox.scrollIntoView({ behavior: REDUCED ? 'auto' : 'smooth', block: 'center' });
+});
+els.hplay.addEventListener('click', toggle);
+$('#vary').addEventListener('click', () => { state.variation++; generate(true); });
+document.addEventListener('keydown', e => {
+  if (e.code !== 'Space' || /^(TEXTAREA|INPUT|SELECT|BUTTON|A)$/.test(document.activeElement.tagName) || (els.dlg.open)) return;
+  e.preventDefault(); toggle();
+});
+if (window.matchMedia) {
+  const mq = matchMedia('(prefers-color-scheme: dark)');
+  const onTheme = () => readPal();
+  if (mq.addEventListener) mq.addEventListener('change', onTheme); else if (mq.addListener) mq.addListener(onTheme);
+}
+
+/* collage helpers */
+function ransomHTML(text, seed, tilt) {
+  let h = '<span class="ln">', i = 0, prev = -1;
+  for (const ch of Array.from(text)) {
+    if (ch === '\n') { h += '</span><br><span class="ln">'; continue; }
+    if (/\s/.test(ch)) { h += '<span class="rn sp"></span>'; continue; }
+    const r = k => hash2(seed + i * 131, k); i++;
+    if (/[，。、；：！？,.!?;:「」…]/.test(ch)) { h += `<span class="rn pu" style="--r:${((r(1) - 0.5) * 10).toFixed(1)}deg">${esc(ch)}</span>`; continue; }
+    let s = Math.floor(r(2) * 7); if (s === prev) s = (s + 3) % 7; prev = s;
+    h += `<span class="rn s${s}" style="--r:${((r(3) - 0.5) * (tilt || 9)).toFixed(1)}deg;--y:${((r(4) - 0.5) * 0.12).toFixed(3)}em">${esc(ch)}</span>`;
+  }
+  return h + '</span>';
+}
+function tornPoly(seed) {
+  const n = 28, pts = [], k = i => hash2(seed, i);
+  for (let i = 0; i <= n; i++) pts.push(`${(i / n * 100).toFixed(2)}% ${(k(i) * 6).toFixed(1)}px`);
+  for (let i = 1; i < n; i++) pts.push(`calc(100% - ${(k(50 + i) * 3).toFixed(1)}px) ${(i / n * 100).toFixed(2)}%`);
+  for (let i = n; i >= 0; i--) pts.push(`${(i / n * 100).toFixed(2)}% calc(100% - ${(k(100 + i) * 7).toFixed(1)}px)`);
+  for (let i = n - 1; i > 0; i--) pts.push(`${(k(150 + i) * 3).toFixed(1)}px ${(i / n * 100).toFixed(2)}%`);
+  return `polygon(${pts.join(',')})`;
+}
+$$('.ransom').forEach((el, i) => {
+  const t = el.dataset.t || '';
+  el.innerHTML = `<span class="sr">${esc(t.replace(/\n/g, ''))}</span><span aria-hidden="true">${ransomHTML(t, 1000 + i * 97)}</span>`;
+});
+$$('[data-ill]').forEach(el => { el.innerHTML = svgIll(el.dataset.ill); });
+$$('.torn').forEach(el => { el.style.clipPath = tornPoly(+el.dataset.seed || 5); });
+
+/* boot */
+readPal();
+els.text.value = savedText != null && savedText.trim() ? savedText : SAMPLES[0].text;
+setSeed(state.seedMode);
+syncTracks();
+generate(false);
+go(location.hash.slice(1) || 'loom', true);
+sizeStage();
+requestAnimationFrame(frame);
+})();
+
+</script>
+</body>
+</html>
